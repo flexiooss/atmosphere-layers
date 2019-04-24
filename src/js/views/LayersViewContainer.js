@@ -1,48 +1,50 @@
 'use strict'
-import {ViewContainer, ViewParameters, ViewEventListenerBuilder} from 'hotballoon'
-import {ViewCounter} from './views/ViewCounter'
-
+import {ViewContainer} from 'hotballoon'
+import {LayersContainer} from './LayersContainer.view'
 
 export class LayersViewContainer extends ViewContainer {
   /**
    *
    * @param {ViewContainerParameters} viewContainerParameters
-   * @param {ContainerStoreCounter} counterContainerStores
-   * @param {ContainerActionCounter} counterContainerActions
+   * @param {PublicStoreHandler<Layers>} layersStore
    */
-  constructor(viewContainerParameters, counterContainerStores, counterContainerActions) {
+  constructor(viewContainerParameters, layersStore) {
     super(viewContainerParameters)
-    this.__stores = counterContainerStores
-    this.__actions = counterContainerActions
     /**
      *
-     * @type {?ViewCounter}
+     * @type {PublicStoreHandler<Layers>}
      * @private
      */
-    this.__viewCounter = null
-
-    this.__registerViews()
-  }
-
-  __registerViews() {
-    this.__viewCounter = this.addView(
-      new ViewCounter(
-        this,
-        new ContainerStoreCounter(
-          this.__stores.counterStore
-        )
-      )
-    )
+    this.__store = layersStore
+    /**
+     *
+     * @type {Layers}
+     * @private
+     */
+    this.__viewLayersContainer = this.__registerViewLayoutContainer()
 
     this.__handleEvents()
   }
 
+  __registerViewLayoutContainer() {
+    return this.addView(
+      new LayersContainer(
+        this,
+        this.__store
+      )
+    )
+  }
+
   __handleEvents() {
-    this.__viewCounter
-      .on()
-      .increment((payload) => {
-        this.__actions
-          .counterIncrementAction.dispatch(new ActionIncrementCounterBuilder().build())
-      })
+
+  }
+
+  /**
+   *
+   * @param id
+   * @return {Element}
+   */
+  getElementByLayerId(id) {
+    return this.__viewLayersContainer.nodeRef(id)
   }
 }

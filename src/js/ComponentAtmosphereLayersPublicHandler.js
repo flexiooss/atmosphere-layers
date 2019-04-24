@@ -1,5 +1,5 @@
-import {assertType} from 'flexio-jshelpers'
-import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
+import { assertType } from 'flexio-jshelpers'
+import { ComponentAtmosphereLayers } from './ComponentAtmosphereLayers'
 
 const __component = Symbol('__component')
 
@@ -17,19 +17,15 @@ export class ComponentAtmosphereLayersPublicHandler {
    * @return {Layer}
    */
   addLayer() {
-
+    return this[__component].addLayer()
   }
 
   /**
    *
-   * @param {String} id
+   * @param {string} id
+   * @return {?Element}
    */
-  removeLayerById(id) {
-
+  getElementByLayerId(id) {
+    return this[__component].getElementByLayerId(id)
   }
-
-  getElementByLayerId(id){
-
-  }
-
 }

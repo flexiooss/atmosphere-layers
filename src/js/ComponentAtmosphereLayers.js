@@ -1,9 +1,23 @@
-import {StoreBuilder, InMemoryStoreParams, TypeCheck, StoreTypeParam} from 'hotballoon'
-import {isNode, assertType, globalScope, FLEXIO_IMPORT_OBJECT} from 'flexio-jshelpers'
+import {
+  StoreBuilder,
+  InMemoryStoreParams,
+  PublicStoreHandler,
+  TypeCheck,
+  StoreTypeParam,
+  ViewContainerParameters,
+  ActionBuilder, ActionParams, ActionTypeParam
+} from 'hotballoon'
+import {isNode, assertType, globalScope, FLEXIO_IMPORT_OBJECT, isNull, assert} from 'flexio-jshelpers'
+import {LayersViewContainer} from './views/LayersViewContainer'
 
 const Layers = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.stores.Layers
 const LayersBuilder = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.stores.LayersBuilder
+const ChangeLayerOrder = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.actions.ChangeLayerOrder
+const RemoveLayer = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.actions.RemoveLayer
 
+/**
+ * @implements {Component}
+ */
 export class ComponentAtmosphereLayers {
   /**
    *
@@ -34,7 +48,24 @@ export class ComponentAtmosphereLayers {
      * @type {Store<Layers>}
      * @private
      */
-    this.__layersStore = this.__initLayersStore()
+    this.__store = this.__initLayersStore()
+    /**
+     *
+     * @type {PublicStoreHandler<Layers>}
+     */
+    this.publicStoreHandler = new PublicStoreHandler(this.__store)
+
+    /**
+     *
+     * @type {Action<ChangeLayerOrder>}
+     */
+    this.changeLayerOrderAction = this.__initChangeLayerOrderAction()
+
+    /**
+     *
+     * @type {Action<RemoveLayer>}
+     */
+    this.removeLayerAction = this.__initRemoveLayerAction()
   }
 
   /**
@@ -76,10 +107,50 @@ export class ComponentAtmosphereLayers {
 
   /**
    *
-   * @return {ComponentCounter}
+   * @return {Action<ChangeLayerOrder>}
    */
-  __initActionIncrementCounter() {
-    //TODO implement init actions
+  __initChangeLayerOrderAction() {
+    return ActionBuilder.build(
+      new ActionParams(
+        new ActionTypeParam(
+          ChangeLayerOrder,
+          v => v,
+          /**
+           *
+           * @param {ChangeLayerOrder} v
+           */
+          v => {
+            assert(!isNull(v.id) && v.id !== '')
+            assert(!isNull(v.order))
+          }
+        ),
+        this.__componentContext.dispatcher()
+      )
+    )
+
+  }
+
+  /**
+   *
+   * @return {Action<RemoveLayer>}
+   */
+  __initRemoveLayerAction() {
+    return ActionBuilder.build(
+      new ActionParams(
+        new ActionTypeParam(
+          RemoveLayer,
+          v => v,
+          /**
+           *
+           * @param {RemoveLayer} v
+           */
+          v => {
+            assert(!isNull(v.id) && v.id != '')
+          }
+        ),
+        this.__componentContext.dispatcher()
+      )
+    )
 
   }
 
@@ -88,6 +159,29 @@ export class ComponentAtmosphereLayers {
    * @return {ComponentAtmosphereLayers}
    */
   mountView() {
+
+    this.__viewContainer = this.__componentContext.addViewContainer(
+      new LayersViewContainer(
+        new ViewContainerParameters(
+          this.__componentContext,
+          this.__componentContext.nextID(),
+          this.__parentNode
+        ),
+        this.publicStoreHandler,
+      )
+    )
     return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @return {?Element}
+   */
+  getElementByLayerId(id) {
+    if (isNull(this.__viewContainer)) {
+      return null
+    }
+    return this.__viewContainer.getElementByLayerId(id)
   }
 }
