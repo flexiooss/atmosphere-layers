@@ -1,0 +1,24 @@
+{
+  "name": "@flexio-oss/atmosphere-layers",
+  "description": "Hotballoon Component to manage Views as layers",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Thomas Chatelain (https://github.com/TomAchT)",
+  "repository": "git@github.com:flexiooss/atmosphere-layers.git",
+  "hotballoon-shed": {
+    "builder": "webpack4",
+    "test": {
+      "tester": "code-altimeter-js",
+      "path": "./src/test"
+    },
+    "generate-sources": {
+      "value-objects": {
+        "extension": ".spec"
+      }
+    }
+  },
+  "peerDependencies": {
+    "flexio-jshelpers": "https://github.com/flexiooss/flexio-jshelpers.git",
+    "hotballoon": "https://github.com/flexiooss/hotballoon.git"
+  }
+}
