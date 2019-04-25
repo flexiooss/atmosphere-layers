@@ -1,6 +1,6 @@
+import './generated/io/package'
 import { globalFlexioImport, deepKeyAssigner } from 'flexio-jshelpers'
 import { LayerArray, LayerArrayBuilder } from './src/js/types/LayerArray'
-import './generated/io/package'
 
 /**
  * @property {LayerArray} LayerArray
@@ -8,10 +8,9 @@ import './generated/io/package'
 deepKeyAssigner(globalFlexioImport, 'io.flexio.@flexio_oss/atmosphere_layers.types.LayerArray', LayerArray)
 
 /**
- * @namespace
- * @property {object}  globalFlexioImport
- * @property {LayerArrayBuilder}  globalFlexioImport.io.flexio.@flexio_oss/atmosphere_layers.types.LayerArrayBuilder
+ * @property {LayerArrayBuilder}  LayerArrayBuilder
  */
 deepKeyAssigner(globalFlexioImport, 'io.flexio.@flexio_oss/atmosphere_layers.types.LayerArrayBuilder', LayerArrayBuilder)
 
+console.log(globalFlexioImport)
 export { ComponentAtmosphereLayersBuilder } from './src/js/ComponentAtmosphereLayersBuilder'

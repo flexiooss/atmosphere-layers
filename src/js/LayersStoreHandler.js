@@ -1,20 +1,4 @@
-import { Sequence, globalFlexioImport, deepKeyResolver } from 'flexio-jshelpers'
-
-/**
- *
- * @type {LayerBuilder}
- */
-const LayerBuilder = deepKeyResolver(globalFlexioImport, 'io.flexio.@flexio_oss/atmosphere_layers.types.LayerBuilder')
-/**
- *
- * @type {LayersBuilder}
- */
-const LayersBuilder = deepKeyResolver(globalFlexioImport, 'io.flexio.@flexio_oss/atmosphere_layers.stores.LayersBuilder')
-/**
- *
- * @type {LayerArrayBuilder}
- */
-const LayerArrayBuilder = deepKeyResolver(globalFlexioImport, 'io.flexio.@flexio_oss/atmosphere_layers.types.LayerArrayBuilder')
+import {Sequence, globalFlexioImport} from 'flexio-jshelpers'
 
 export class LayersStoreHandler {
   /**
@@ -47,18 +31,20 @@ export class LayersStoreHandler {
    * @return {Layer}
    */
   addLayer() {
-    const layer = new LayerBuilder()
+    const layer = new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerBuilder()
       .id(this.__sequence.nextID())
       .build()
 
-    const values = LayerArrayBuilder
+    const values = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerArrayBuilder
       .from(this.__layers().values())
       .pushValue(layer)
       .build()
 
-    const layers = new LayersBuilder()
+    const layers = new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder()
       .values(values)
       .build()
+
+    this.__store.set(layers)
 
     return layer
   }

@@ -7,13 +7,32 @@ import {
   ViewContainerParameters,
   ActionBuilder, ActionParams, ActionTypeParam
 } from 'hotballoon'
-import {isNode, assertType, globalScope, FLEXIO_IMPORT_OBJECT, isNull, assert} from 'flexio-jshelpers'
+import {assertType, globalFlexioImport, isNull, assert} from 'flexio-jshelpers'
 import {LayersViewContainer} from './views/LayersViewContainer'
+import {LayersStoreHandler} from './LayersStoreHandler'
 
-const Layers = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.stores.Layers
-const LayersBuilder = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.stores.LayersBuilder
-const ChangeLayerOrder = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.actions.ChangeLayerOrder
-const RemoveLayer = globalScope[FLEXIO_IMPORT_OBJECT].io.flexio.@flexio_oss.atmosphere_layers.actions.RemoveLayer
+/**
+ *
+ * @type {Layers}
+ */
+const Layers = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.Layers
+
+/**
+ *
+ * @type {LayersBuilder}
+ */
+const LayersBuilder = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder
+
+/**
+ *
+ * @type {ChangeLayerOrder}
+ */
+const ChangeLayerOrder = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].actions.ChangeLayerOrder
+/**
+ *
+ * @type {RemoveLayer}
+ */
+const RemoveLayer = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].actions.RemoveLayer
 
 /**
  * @implements {Component}
@@ -27,11 +46,6 @@ export class ComponentAtmosphereLayers {
     assertType(TypeCheck.isComponentContext(componentContext),
       'ComponentAtmosphereLayers:constructor: `componentContext` argument should be a ComponentContext, %s given',
       typeof componentContext
-    )
-
-    assertType(!!isNode(parentNode),
-      'ComponentAtmosphereLayers:constructor: `parentNode` argument should be a NodeType, %s given',
-      typeof parentNode
     )
 
     this.__componentContext = componentContext
@@ -56,6 +70,12 @@ export class ComponentAtmosphereLayers {
      * @type {PublicStoreHandler<Layers>}
      */
     this.publicStoreHandler = new PublicStoreHandler(this.__store)
+    /**
+     *
+     * @type {LayersStoreHandler}
+     * @private
+     */
+    this.__storeHandler = new LayersStoreHandler(this.__store)
 
     /**
      *
@@ -75,6 +95,7 @@ export class ComponentAtmosphereLayers {
    * @return {Store<Layers>}
    */
   __initLayersStore() {
+
     return StoreBuilder.InMemory(
       new InMemoryStoreParams(
         new StoreTypeParam(
@@ -102,7 +123,9 @@ export class ComponentAtmosphereLayers {
            */
           (obj) => LayersBuilder.fromObject(obj).build()
         ),
-        new LayersBuilder().build()
+        new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder()
+          .values(new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerArrayBuilder().build())
+          .build()
       )
     )
   }
@@ -129,7 +152,6 @@ export class ComponentAtmosphereLayers {
         this.__componentContext.dispatcher()
       )
     )
-
   }
 
   /**
@@ -147,13 +169,12 @@ export class ComponentAtmosphereLayers {
            * @param {RemoveLayer} v
            */
           v => {
-            assert(!isNull(v.id) && v.id != '')
+            assert(!isNull(v.id) && v.id !== '')
           }
         ),
         this.__componentContext.dispatcher()
       )
     )
-
   }
 
   /**
@@ -161,6 +182,7 @@ export class ComponentAtmosphereLayers {
    * @return {ComponentAtmosphereLayers}
    */
   mountView(parentNode) {
+    console.log('ComponentAtmosphereLayers:mountView')
     this.__parentNode = parentNode
 
     this.__viewContainer = this.__componentContext.addViewContainer(
@@ -170,9 +192,10 @@ export class ComponentAtmosphereLayers {
           this.__componentContext.nextID(),
           this.__parentNode
         ),
-        this.publicStoreHandler,
+        this.publicStoreHandler
       )
     )
+    this.__viewContainer.renderAndMount()
     return this
   }
 
@@ -188,4 +211,11 @@ export class ComponentAtmosphereLayers {
     return this.__viewContainer.getElementByLayerId(id)
   }
 
+  /**
+   *
+   * @return {Layer}
+   */
+  addLayer() {
+    return this.__storeHandler.addLayer()
+  }
 }
