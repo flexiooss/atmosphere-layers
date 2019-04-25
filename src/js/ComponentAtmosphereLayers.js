@@ -22,9 +22,8 @@ export class ComponentAtmosphereLayers {
   /**
    *
    * @param {ComponentContext} componentContext
-   * @param {Element} parentNode
    */
-  constructor(componentContext, parentNode) {
+  constructor(componentContext) {
     assertType(TypeCheck.isComponentContext(componentContext),
       'ComponentAtmosphereLayers:constructor: `componentContext` argument should be a ComponentContext, %s given',
       typeof componentContext
@@ -36,7 +35,10 @@ export class ComponentAtmosphereLayers {
     )
 
     this.__componentContext = componentContext
-    this.__parentNode = parentNode
+    /**
+     * @type {?Element}
+     */
+    this.__parentNode = null
     /**
      *
      * @type {?LayersViewContainer}
@@ -155,10 +157,11 @@ export class ComponentAtmosphereLayers {
   }
 
   /**
-   *
+   * @param {Element} parentNode
    * @return {ComponentAtmosphereLayers}
    */
-  mountView() {
+  mountView(parentNode) {
+    this.__parentNode = parentNode
 
     this.__viewContainer = this.__componentContext.addViewContainer(
       new LayersViewContainer(
@@ -184,4 +187,5 @@ export class ComponentAtmosphereLayers {
     }
     return this.__viewContainer.getElementByLayerId(id)
   }
+
 }

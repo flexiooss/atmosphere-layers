@@ -1,5 +1,6 @@
 import { View, e, RECONCILIATION_RULES } from 'hotballoon'
 import style from '../../assets/style.css'
+import 'LayersElement'
 
 export class LayersContainer extends View {
   /**
@@ -44,11 +45,11 @@ export class LayersContainer extends View {
     return this.__store.data()
       .values()
       .mapToArray(
-        layer => {
+        (layer, order) => {
           return this.html(
             e('layer#' + layer.id)
               .className(style.layersLayer)
-              .bindClassName(style.layersLayerActive, layer.order === 0)
+              .bindClassName(style.layersLayerActive, order === 0)
               .reconciliationRules(RECONCILIATION_RULES.BYPASS_CHILDREN)
           )
         }
