@@ -101,8 +101,9 @@ export class LayersStoreHandler {
    *
    * @param {string} id
    * @return {number}
+   * @throws {RangeError}
    */
-  getOrderByLayerId(id) {
+  orderByLayerId(id) {
     return this.__findLayerIndexById(this.__layers().values(), id)
   }
 
@@ -121,13 +122,13 @@ export class LayersStoreHandler {
    * @param {LayerArray} layerArray
    * @param {string} id
    * @return {number}
-   * @throws {Error}
+   * @throws {RangeError}
    * @private
    */
   __findLayerIndexById(layerArray, id) {
     const layer = layerArray.findIndex(current => current.id() === id)
     if (layer === -1) {
-      throw new Error('Layer not found : ' + id)
+      throw new RangeError('Layer not found : ' + id)
     }
     return layer
   }
@@ -137,13 +138,13 @@ export class LayersStoreHandler {
    * @param {LayerArray} layerArray
    * @param {string} id
    * @return {Layer}
-   * @throws {Error}
+   * @throws {RangeError}
    * @private
    */
   __findLayerById(layerArray, id) {
     const layer = layerArray.find(current => current.id() === id)
     if (layer === undefined) {
-      throw new Error('Layer not found : ' + id)
+      throw new RangeError('Layer not found : ' + id)
     }
     return layer
   }

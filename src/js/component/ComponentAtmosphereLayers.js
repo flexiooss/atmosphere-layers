@@ -7,9 +7,9 @@ import {
   ViewContainerParameters,
   ActionBuilder, ActionParams, ActionTypeParam
 } from 'hotballoon'
-import {assertType, globalFlexioImport, isNull, assert} from 'flexio-jshelpers'
-import {LayersViewContainer} from './views/LayersViewContainer'
-import {LayersStoreHandler} from './LayersStoreHandler'
+import { assertType, globalFlexioImport, isNull, assert } from 'flexio-jshelpers'
+import { LayersViewContainer } from '../views/LayersViewContainer'
+import { LayersStoreHandler } from '../stores/LayersStoreHandler'
 
 /**
  *
@@ -70,6 +70,7 @@ export class ComponentAtmosphereLayers {
      * @type {PublicStoreHandler<Layers>}
      */
     this.publicStoreHandler = new PublicStoreHandler(this.__store)
+
     /**
      *
      * @type {LayersStoreHandler}
@@ -225,14 +226,14 @@ export class ComponentAtmosphereLayers {
     }
     return this.__viewContainer.getElementByLayerId(id)
   }
+
   /**
    *
    * @param {string} id
    * @return {?number}
    */
-  getOrderByLayerId(id) {
-
-    return this.__storeHandler.addLayer()
+  orderByLayerId(id) {
+    return this.__storeHandler.orderByLayerId(id)
   }
 
   /**

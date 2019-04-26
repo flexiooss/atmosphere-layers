@@ -1,5 +1,5 @@
-import { ComponentAtmosphereLayersPublicHandler } from './ComponentAtmosphereLayersPublicHandler'
-import { ComponentAtmosphereLayers } from './ComponentAtmosphereLayers'
+import { ComponentAtmosphereLayersPublicHandler } from './component/ComponentAtmosphereLayersPublicHandler'
+import { ComponentAtmosphereLayers } from './component/ComponentAtmosphereLayers'
 
 export class ComponentAtmosphereLayersBuilder {
   /**

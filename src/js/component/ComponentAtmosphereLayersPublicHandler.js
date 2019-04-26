@@ -1,5 +1,5 @@
-import {assertType, globalFlexioImport} from 'flexio-jshelpers'
-import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
+import { assertType, globalFlexioImport } from 'flexio-jshelpers'
+import { ComponentAtmosphereLayers } from './ComponentAtmosphereLayers'
 
 const __component = Symbol('__component')
 
@@ -11,6 +11,16 @@ export class ComponentAtmosphereLayersPublicHandler {
   constructor(component) {
     assertType(component instanceof ComponentAtmosphereLayers, 'ComponentAtmosphereLayersPublicHandler:constructor: component argument should be an instanceof ComponentAtmosphereLayers')
     this[__component] = component
+  }
+
+  /**
+   *
+   * @param {Element} parentNode
+   * @return {ComponentAtmosphereLayersPublicHandler}
+   */
+  mountView(parentNode) {
+    this[__component].mountView(parentNode)
+    return this
   }
 
   /**
@@ -27,16 +37,6 @@ export class ComponentAtmosphereLayersPublicHandler {
    */
   getElementByLayerId(id) {
     return this[__component].getElementByLayerId(id)
-  }
-
-  /**
-   *
-   * @param {Element} parentNode
-   * @return {ComponentAtmosphereLayersPublicHandler}
-   */
-  mountView(parentNode) {
-    this[__component].mountView(parentNode)
-    return this
   }
 
   /**
@@ -71,5 +71,23 @@ export class ComponentAtmosphereLayersPublicHandler {
    */
   showLayer(id) {
     this.dipatchChangeLayerOrderAction(id, 0)
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @return {?number}
+   * @throws {RangeError}
+   */
+  orderByLayerId(id) {
+    return this[__component].orderByLayerId(id)
+  }
+
+  /**
+   *
+   * @return {PublicStoreHandler<Layers>}
+   */
+  subscribeToStore(clb) {
+    return this[__component].publicStoreHandler
   }
 }
