@@ -17,6 +17,7 @@ export class LayersContainer extends View {
      */
     this.__store = layersStore
     this.subscribeToStore(this.__store)
+    console.log(this)
   }
 
   /**

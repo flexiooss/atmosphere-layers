@@ -95,7 +95,6 @@ export class ComponentAtmosphereLayers {
    * @return {Store<Layers>}
    */
   __initLayersStore() {
-
     return StoreBuilder.InMemory(
       new InMemoryStoreParams(
         new StoreTypeParam(
@@ -135,7 +134,11 @@ export class ComponentAtmosphereLayers {
    * @return {Action<ChangeLayerOrder>}
    */
   __initChangeLayerOrderAction() {
-    return ActionBuilder.build(
+    /**
+     *
+     * @type {Action<ChangeLayerOrder>}
+     */
+    const action = ActionBuilder.build(
       new ActionParams(
         new ActionTypeParam(
           ChangeLayerOrder,
@@ -145,13 +148,20 @@ export class ComponentAtmosphereLayers {
            * @param {ChangeLayerOrder} v
            */
           v => {
-            assert(!isNull(v.id) && v.id !== '')
-            assert(!isNull(v.order))
+            assert(!isNull(v.id()) && v.id() !== '', 'ChangeLayerOrderAction:validator')
+            assert(!isNull(v.order()), 'ChangeLayerOrderAction:validator')
+            return true
           }
         ),
         this.__componentContext.dispatcher()
       )
     )
+
+    action.listenWithCallback((payload) => {
+      this.__changeLayerOrder(payload)
+    })
+
+    return action
   }
 
   /**
@@ -159,7 +169,7 @@ export class ComponentAtmosphereLayers {
    * @return {Action<RemoveLayer>}
    */
   __initRemoveLayerAction() {
-    return ActionBuilder.build(
+    const action = ActionBuilder.build(
       new ActionParams(
         new ActionTypeParam(
           RemoveLayer,
@@ -169,12 +179,18 @@ export class ComponentAtmosphereLayers {
            * @param {RemoveLayer} v
            */
           v => {
-            assert(!isNull(v.id) && v.id !== '')
+            assert(!isNull(v.id()) && v.id() !== '', 'RemoveLayer:validator')
+            return true
           }
         ),
         this.__componentContext.dispatcher()
       )
     )
+    action.listenWithCallback((payload) => {
+      this.__removeLayer(payload)
+    })
+
+    return action
   }
 
   /**
@@ -182,7 +198,6 @@ export class ComponentAtmosphereLayers {
    * @return {ComponentAtmosphereLayers}
    */
   mountView(parentNode) {
-    console.log('ComponentAtmosphereLayers:mountView')
     this.__parentNode = parentNode
 
     this.__viewContainer = this.__componentContext.addViewContainer(
@@ -210,6 +225,15 @@ export class ComponentAtmosphereLayers {
     }
     return this.__viewContainer.getElementByLayerId(id)
   }
+  /**
+   *
+   * @param {string} id
+   * @return {?number}
+   */
+  getOrderByLayerId(id) {
+
+    return this.__storeHandler.addLayer()
+  }
 
   /**
    *
@@ -217,5 +241,21 @@ export class ComponentAtmosphereLayers {
    */
   addLayer() {
     return this.__storeHandler.addLayer()
+  }
+
+  /**
+   *
+   * @param {RemoveLayer} payload
+   */
+  __removeLayer(payload) {
+    return this.__storeHandler.removeLayer(payload)
+  }
+
+  /**
+   *
+   * @param {ChangeLayerOrder} payload
+   */
+  __changeLayerOrder(payload) {
+    return this.__storeHandler.changeLayerOrder(payload)
   }
 }

@@ -1,4 +1,5 @@
 import {FlexArray, globalFlexioImport, assertType, deepKeyResolver} from 'flexio-jshelpers'
+
 /**
  *
  * @type {Layer}
@@ -31,6 +32,15 @@ export class LayerArray extends FlexArray {
 export class LayerArrayBuilder {
   constructor() {
     this._values = []
+  }
+
+  /**
+   * @param { Layer[] } layers
+   * @returns {LayerArrayBuilder}
+   */
+  values(layers) {
+    this._values = layers
+    return this
   }
 
   /**
