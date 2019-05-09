@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "flexio-jshelpers": "https://github.com/flexiooss/flexio-jshelpers.git",
-    "hotballoon": "https://github.com/flexiooss/hotballoon.git"
+    "hotballoon": "https://github.com/flexiooss/hotballoon.git",
+    "eslint-config-standard": "^11.0.0-beta.0"
   },
   "devDependencies": {
     "eslint": "^5.13.0",
