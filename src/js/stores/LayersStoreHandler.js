@@ -31,7 +31,7 @@ export class LayersStoreHandler {
    * @return {Layer}
    */
   addLayer() {
-    const layer = new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerBuilder()
+    const layer = new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder()
       .id(this.__sequence.nextID())
       .build()
 
@@ -39,7 +39,7 @@ export class LayersStoreHandler {
       .pushValue(layer)
       .build()
 
-    const layers = new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder()
+    const layers = new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
       .values(values)
       .build()
 
@@ -57,8 +57,8 @@ export class LayersStoreHandler {
     const layers = values.toArray()
     layers.splice(this.__findLayerIndexById(values, payload.id()), 1)
     this.__store.set(
-      new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder()
-        .values(new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerArrayBuilder()
+      new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
+        .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder()
           .values(layers)
           .build()
         )
@@ -88,8 +88,8 @@ export class LayersStoreHandler {
     layers.splice(order, 0, layer)
 
     this.__store.set(
-      new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder()
-        .values(new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerArrayBuilder()
+      new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
+        .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder()
           .values(layers)
           .build()
         )
@@ -113,7 +113,7 @@ export class LayersStoreHandler {
    * @private
    */
   __layersFromCurrentBuilder() {
-    return globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerArrayBuilder
+    return globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder
       .from(this.__layers().values())
   }
 

@@ -4,7 +4,7 @@ import {FlexArray, globalFlexioImport, assertType, deepKeyResolver} from 'flexio
  *
  * @type {Layer}
  */
-const Layer = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.Layer
+const Layer = globalFlexioImport.io.flexio.atmosphere_layers.types.Layer
 
 /**
  *

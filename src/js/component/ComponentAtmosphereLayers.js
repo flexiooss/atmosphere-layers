@@ -15,24 +15,24 @@ import { LayersStoreHandler } from '../stores/LayersStoreHandler'
  *
  * @type {Layers}
  */
-const Layers = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.Layers
+const Layers = globalFlexioImport.io.flexio.atmosphere_layers.stores.Layers
 
 /**
  *
  * @type {LayersBuilder}
  */
-const LayersBuilder = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder
+const LayersBuilder = globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder
 
 /**
  *
  * @type {ChangeLayerOrder}
  */
-const ChangeLayerOrder = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].actions.ChangeLayerOrder
+const ChangeLayerOrder = globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder
 /**
  *
  * @type {RemoveLayer}
  */
-const RemoveLayer = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].actions.RemoveLayer
+const RemoveLayer = globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer
 
 /**
  * @implements {Component}
@@ -123,8 +123,8 @@ export class ComponentAtmosphereLayers {
            */
           (obj) => LayersBuilder.fromObject(obj).build()
         ),
-        new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].stores.LayersBuilder()
-          .values(new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerArrayBuilder().build())
+        new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
+          .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder().build())
           .build()
       )
     )

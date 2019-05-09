@@ -45,7 +45,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    */
   dispatchRemoveLayerAction(id) {
     this[__component].removeLayerAction.dispatch(
-      new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].actions.RemoveLayerBuilder()
+      new globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayerBuilder()
         .id(id)
         .build()
     )
@@ -58,7 +58,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    */
   dipatchChangeLayerOrderAction(id, order) {
     this[__component].changeLayerOrderAction.dispatch(
-      new globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].actions.ChangeLayerOrderBuilder()
+      new globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrderBuilder()
         .id(id)
         .order(order)
         .build()
