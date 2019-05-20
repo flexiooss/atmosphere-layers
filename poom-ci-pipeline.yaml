@@ -46,6 +46,8 @@ env:
   - FLEXIO_SCRIPTS: git@github.com:Flexio-corp/flexio-ci-scripts.git
   - FLEXIO_SCRIPTS_BRANCH: master
 
+  - EXTRACTED_PACKAGE_PATH: /package
+
   - PIPELINES_URL: https://pipelines.ci.flexio.io/pipelines
   - DEPENDENCIES_URL: https://dependencies.ci.flexio.io/poomci-dependency-api
   - CI_TOOLS_IMAGE: codingmatters/ci-tools:1.2.0-SNAPSHOT
@@ -71,7 +73,6 @@ env:
   - JS_REGISTRY_USERNAME: flexio-ci
   - JS_REGISTRY_EMAIL: dev@flexio.fr
 
-  - EXTRACTED_PACKAGE_PATH: /package
 
 secrets:
   - name: JS_REGISTRY_PASSWORD
