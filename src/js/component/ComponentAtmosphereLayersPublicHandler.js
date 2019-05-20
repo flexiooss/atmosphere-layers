@@ -56,7 +56,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    * @param {string} id
    * @param {number} order
    */
-  dipatchChangeLayerOrderAction(id, order) {
+  dispatchChangeLayerOrderAction(id, order) {
     this[__component].changeLayerOrderAction.dispatch(
       new globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrderBuilder()
         .id(id)
@@ -70,7 +70,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    * @param {string} id
    */
   showLayer(id) {
-    this.dipatchChangeLayerOrderAction(id, 0)
+    this.dispatchChangeLayerOrderAction(id, 0)
   }
 
   /**
