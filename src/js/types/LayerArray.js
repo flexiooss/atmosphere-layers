@@ -1,4 +1,4 @@
-import {FlexArray, globalFlexioImport, assertType, deepKeyResolver} from 'flexio-jshelpers'
+import {FlexArray, globalFlexioImport, assertType} from 'flexio-jshelpers'
 
 /**
  *
@@ -10,7 +10,7 @@ const Layer = globalFlexioImport.io.flexio.atmosphere_layers.types.Layer
  *
  * @type {LayerBuilder}
  */
-const LayerBuilder = globalFlexioImport.io.flexio['@flexio_oss/atmosphere_layers'].types.LayerBuilder
+const LayerBuilder = globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder
 
 /**
  * @extends {FlexArray<Layer>}
