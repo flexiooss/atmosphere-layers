@@ -35,7 +35,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    * @param {Layer} layer
    * @return {?Element}
    */
-  getElementByLayerId(layer) {
+  getElementByLayer(layer) {
     return this[__component].getElementByLayerId(layer.id())
   }
 
@@ -65,7 +65,7 @@ export class ComponentAtmosphereLayersPublicHandler {
     )
   }
 
-  hideCurrentLayer() {
+  hideShowedLayer() {
     this.dispatchChangeLayerOrderAction(this[__component].currentShowedLayer(), 1)
   }
 
@@ -73,7 +73,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    *
    * @return {Layer}
    */
-  currentShowedLayer() {
+  getShowedLayer() {
     return this[__component].currentShowedLayer()
   }
 
@@ -91,7 +91,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    * @return {?number}
    * @throws {RangeError}
    */
-  orderByLayerId(layer) {
+  getLayerOrder(layer) {
     return this[__component].orderByLayerId(layer.id())
   }
 
