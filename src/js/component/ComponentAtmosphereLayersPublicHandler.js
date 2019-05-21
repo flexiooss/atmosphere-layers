@@ -82,7 +82,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    * @param {Layer} layer
    */
   showLayer(layer) {
-    this.dispatchChangeLayerOrderAction(layer.id(), 0)
+    this.dispatchChangeLayerOrderAction(layer, 0)
   }
 
   /**
