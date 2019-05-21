@@ -1,5 +1,5 @@
-import { assertType, globalFlexioImport } from 'flexio-jshelpers'
-import { ComponentAtmosphereLayers } from './ComponentAtmosphereLayers'
+import {assertType, globalFlexioImport} from 'flexio-jshelpers'
+import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
 
 const __component = Symbol('__component')
 
@@ -32,62 +32,74 @@ export class ComponentAtmosphereLayersPublicHandler {
 
   /**
    *
-   * @param {string} id
+   * @param {Layer} layer
    * @return {?Element}
    */
-  getElementByLayerId(id) {
-    return this[__component].getElementByLayerId(id)
+  getElementByLayerId(layer) {
+    return this[__component].getElementByLayerId(layer.id())
   }
 
   /**
    *
-   * @param {string} id
+   * @param {Layer} layer
    */
-  dispatchRemoveLayerAction(id) {
+  dispatchRemoveLayerAction(layer) {
     this[__component].removeLayerAction.dispatch(
       new globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayerBuilder()
-        .id(id)
+        .id(layer.id())
         .build()
     )
   }
 
   /**
    *
-   * @param {string} id
+   * @param {Layer} layer
    * @param {number} order
    */
-  dispatchChangeLayerOrderAction(id, order) {
+  dispatchChangeLayerOrderAction(layer, order) {
     this[__component].changeLayerOrderAction.dispatch(
       new globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrderBuilder()
-        .id(id)
+        .id(layer.id())
         .order(order)
         .build()
     )
   }
 
-  /**
-   *
-   * @param {string} id
-   */
-  showLayer(id) {
-    this.dispatchChangeLayerOrderAction(id, 0)
+  hideCurrentLayer() {
+    this.dispatchChangeLayerOrderAction(this[__component].currentShowedLayer(), 1)
   }
 
   /**
    *
-   * @param {string} id
+   * @return {Layer}
+   */
+  currentShowedLayer() {
+    return this[__component].currentShowedLayer()
+  }
+
+  /**
+   *
+   * @param {Layer} layer
+   */
+  showLayer(layer) {
+    this.dispatchChangeLayerOrderAction(layer.id(), 0)
+  }
+
+  /**
+   *
+   * @param {Layer} layer
    * @return {?number}
    * @throws {RangeError}
    */
-  orderByLayerId(id) {
-    return this[__component].orderByLayerId(id)
+  orderByLayerId(layer) {
+    return this[__component].orderByLayerId(layer.id())
   }
 
   /**
    *
    * @return {PublicStoreHandler<Layers>}
    */
-  subscribeToStore(clb) {
+  store() {
     return this[__component].publicStoreHandler
   }
 }

@@ -243,6 +243,13 @@ export class ComponentAtmosphereLayers {
   addLayer() {
     return this.__storeHandler.addLayer()
   }
+  /**
+   *
+   * @return {Layer}
+   */
+  currentShowedLayer() {
+    return this.__storeHandler.currentShowedLayer()
+  }
 
   /**
    *

@@ -1,4 +1,4 @@
-import { Sequence, globalFlexioImport } from 'flexio-jshelpers'
+import {Sequence, globalFlexioImport} from 'flexio-jshelpers'
 
 export class LayersStoreHandler {
   /**
@@ -11,7 +11,7 @@ export class LayersStoreHandler {
   }
 
   /**
-   *@return {Layers}
+   * @return {Layers}
    * @private
    */
   __layers() {
@@ -105,6 +105,14 @@ export class LayersStoreHandler {
    */
   orderByLayerId(id) {
     return this.__findLayerIndexById(this.__layers().values(), id)
+  }
+
+  /**
+   *
+   * @return {Layer}
+   */
+  currentShowedLayer() {
+    return this.__layers().values().first()
   }
 
   /**
