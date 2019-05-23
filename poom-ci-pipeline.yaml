@@ -26,7 +26,8 @@ onSuccess:
     timeout: 10
     exec:
       - $NOTIFY --data-urlencode "status=2" --data-urlencode "current-stage=$STAGE"
-      - $UPLOAD_PROJECT_METADATA
+      - $PROJECT_METADATA -S $WORKSPACE/project-metadata.json
+      - $UPLOAD_PROJECT_METADATA $WORKSPACE/project-metadata.json
       - $TRIGGER_DOWNSTREAM
     onlyWhen:
       - branch in (master, develop)
@@ -61,7 +62,7 @@ env:
   - FLEXIO_FLOW: $DOCKER flexio-flow
 
   - PROJECT_METADATA: $FLEXIO_FLOW poom-ci full-repository-json --repository-id $REPOSITORY_ID --repository-name "$REPOSITORY" --repository-checkout-spec "$CHECKOUT_SPEC"
-  - UPLOAD_PROJECT_METADATA: $DOCKER /flexio-ci-scripts/bin/upload-project-metadata-from-json.sh $DEPENDENCIES_URL "$PROJECT_METADATA"
+  - UPLOAD_PROJECT_METADATA: $DOCKER /flexio-ci-scripts/bin/upload-project-metadata-from-json.sh $DEPENDENCIES_URL
 
   - TRIGGER_DOWNSTREAM: docker run --rm $DOCKER_ENV $DOCKER_VOLUMES $CI_TOOLS_IMAGE /usr/local/bin/trigger-downstream.sh $PIPELINES_URL $DEPENDENCIES_URL $REPOSITORY_ID "$REPOSITORY" "$CHECKOUT_SPEC"
 
