@@ -26,7 +26,7 @@ onSuccess:
     timeout: 10
     exec:
       - $NOTIFY --data-urlencode "status=2" --data-urlencode "current-stage=$STAGE"
-      - $PROJECT_METADATA -S $WORKSPACE/project-metadata.json
+      - $PROJECT_METADATA -F $WORKSPACE/project-metadata.json
       - $UPLOAD_PROJECT_METADATA $WORKSPACE/project-metadata.json
       - $TRIGGER_DOWNSTREAM
     onlyWhen:
