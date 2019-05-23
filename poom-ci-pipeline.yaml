@@ -26,8 +26,8 @@ onSuccess:
     timeout: 10
     exec:
       - $NOTIFY --data-urlencode "status=2" --data-urlencode "current-stage=$STAGE"
-      - $PROJECT_METADATA --filename $WORKSPACE/project-metadata.json
-      - $UPLOAD_PROJECT_METADATA $WORKSPACE/project-metadata.json
+      - $PROJECT_METADATA --filename /project-metadata/project-metadata.json
+      - $UPLOAD_PROJECT_METADATA /project-metadata/project-metadata.json
       - $TRIGGER_DOWNSTREAM
     onlyWhen:
       - branch in (master, develop)
@@ -53,7 +53,7 @@ env:
   - DEPENDENCIES_URL: https://dependencies.ci.flexio.io/poomci-dependency-api
   - CI_TOOLS_IMAGE: codingmatters/ci-tools:1.2.0-SNAPSHOT
 
-  - DOCKER_VOLUMES: -v $SRC:/src -v $WORKSPACE/flexio-ci-scripts:/flexio-ci-scripts -v $WORKSPACE$EXTRACTED_PACKAGE_PATH:$EXTRACTED_PACKAGE_PATH
+  - DOCKER_VOLUMES: -v $SRC:/src -v $WORKSPACE/flexio-ci-scripts:/flexio-ci-scripts -v $WORKSPACE/project-metadata:/project-metadata -v $WORKSPACE$EXTRACTED_PACKAGE_PATH:$EXTRACTED_PACKAGE_PATH
   - DOCKER_ENV: --env REPOSITORY_ID="$REPOSITORY_ID" --env REPOSITORY="$REPOSITORY" --env CHECKOUT_SPEC="$CHECKOUT_SPEC" --env M2_LOCAL_REPO="/m2"
 
   - DOCKER_CMD: docker run --rm
