@@ -6,7 +6,7 @@ import {
   StoreTypeParam,
   ViewContainerParameters,
   ActionBuilder, ActionParams, ActionTypeParam
-} from 'hotballoon'
+} from '@flexio-oss/hotballoon'
 import { assertType, globalFlexioImport, isNull, assert } from 'flexio-jshelpers'
 import { LayersViewContainer } from '../views/LayersViewContainer'
 import { LayersStoreHandler } from '../stores/LayersStoreHandler'

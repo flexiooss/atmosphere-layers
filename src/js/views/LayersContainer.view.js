@@ -1,4 +1,4 @@
-import { View, e, RECONCILIATION_RULES } from 'hotballoon'
+import { View, e, RECONCILIATION_RULES } from '@flexio-oss/hotballoon'
 import style from '../../assets/style.css'
 import './LayersElement'
 

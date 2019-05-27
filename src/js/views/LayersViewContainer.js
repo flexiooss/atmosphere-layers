@@ -1,5 +1,5 @@
 'use strict'
-import {ViewContainer} from 'hotballoon'
+import {ViewContainer} from '@flexio-oss/hotballoon'
 import {LayersContainer} from './LayersContainer.view'
 
 export class LayersViewContainer extends ViewContainer {
