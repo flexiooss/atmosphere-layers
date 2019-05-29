@@ -3,23 +3,11 @@ import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {FlexArray} from '@flexio-oss/flex-types'
 
 /**
- *
- * @type {Layer}
- */
-const Layer = globalFlexioImport.io.flexio.atmosphere_layers.types.Layer
-
-/**
- *
- * @type {LayerBuilder}
- */
-const LayerBuilder = globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder
-
-/**
  * @extends {FlexArray<Layer>}
  */
 export class LayerArray extends FlexArray {
   _validate(v) {
-    assertType(v instanceof Layer, 'LayerArray: input should be a Layer')
+    assertType(v instanceof globalFlexioImport.io.flexio.atmosphere_layers.types.Layer, 'LayerArray: input should be a Layer')
   }
 
   /**
@@ -50,7 +38,7 @@ export class LayerArrayBuilder {
    * @returns {LayerArrayBuilder}
    */
   pushValue(layer) {
-    assertType(layer instanceof Layer, 'LayerArrayBuilder:pushValue: layer should be an instance of Layer')
+    assertType(layer instanceof globalFlexioImport.io.flexio.atmosphere_layers.types.Layer, 'LayerArrayBuilder:pushValue: layer should be an instance of Layer')
     this._values.push(layer)
     return this
   }
@@ -70,7 +58,7 @@ export class LayerArrayBuilder {
     const builder = new LayerArrayBuilder()
     builder._values = []
     jsonObject.forEach((layer) => {
-      builder._values.push(LayerBuilder.fromObject(layer).build())
+      builder._values.push(globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder.fromObject(layer).build())
     })
     return builder
   }
@@ -91,7 +79,7 @@ export class LayerArrayBuilder {
   static from(instance) {
     const builder = new LayerArrayBuilder()
     instance.forEach((layer) => {
-      builder.pushValue(LayerBuilder.from(layer).build())
+      builder.pushValue(globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder.from(layer).build())
     })
     return builder
   }
