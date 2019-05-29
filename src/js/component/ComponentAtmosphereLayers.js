@@ -13,29 +13,6 @@ import {LayersViewContainer} from '../views/LayersViewContainer'
 import {LayersStoreHandler} from '../stores/LayersStoreHandler'
 
 /**
- *
- * @type {Layers}
- */
-const Layers = globalFlexioImport.io.flexio.atmosphere_layers.stores.Layers
-
-/**
- *
- * @type {LayersBuilder}
- */
-const LayersBuilder = globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder
-
-/**
- *
- * @type {ChangeLayerOrder}
- */
-const ChangeLayerOrder = globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder
-/**
- *
- * @type {RemoveLayer}
- */
-const RemoveLayer = globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer
-
-/**
  * @implements {Component}
  */
 export class ComponentAtmosphereLayers {
@@ -100,7 +77,7 @@ export class ComponentAtmosphereLayers {
     return StoreBuilder.InMemory(
       new InMemoryStoreParams(
         new StoreTypeParam(
-          Layers,
+          globalFlexioImport.io.flexio.atmosphere_layers.stores.Layers,
           /**
            *
            * @param {Layers} data
@@ -122,7 +99,7 @@ export class ComponentAtmosphereLayers {
            * @param {Object} obj
            * @return {Layers}
            */
-          (obj) => LayersBuilder.fromObject(obj).build()
+          (obj) => globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder.fromObject(obj).build()
         ),
         new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
           .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder().build())
@@ -143,7 +120,7 @@ export class ComponentAtmosphereLayers {
     const action = ActionBuilder.build(
       new ActionParams(
         new ActionTypeParam(
-          ChangeLayerOrder,
+          globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder,
           v => v,
           /**
            *
@@ -174,7 +151,7 @@ export class ComponentAtmosphereLayers {
     const action = ActionBuilder.build(
       new ActionParams(
         new ActionTypeParam(
-          RemoveLayer,
+          globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer,
           v => v,
           /**
            *
