@@ -1,4 +1,5 @@
-import {assertType, globalFlexioImport} from 'flexio-jshelpers'
+import {assertType} from '@flexio-oss/assert'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
 
 const __component = Symbol('__component')

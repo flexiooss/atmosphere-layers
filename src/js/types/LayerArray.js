@@ -1,4 +1,6 @@
-import {FlexArray, globalFlexioImport, assertType} from 'flexio-jshelpers'
+import {assertType} from '@flexio-oss/assert'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {FlexArray} from '@flexio-oss/flex-types'
 
 /**
  *

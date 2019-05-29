@@ -7,9 +7,10 @@ import {
   ViewContainerParameters,
   ActionBuilder, ActionParams, ActionTypeParam
 } from '@flexio-oss/hotballoon'
-import { assertType, globalFlexioImport, isNull, assert } from 'flexio-jshelpers'
-import { LayersViewContainer } from '../views/LayersViewContainer'
-import { LayersStoreHandler } from '../stores/LayersStoreHandler'
+import {assertType, isNull, assert} from '@flexio-oss/assert'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {LayersViewContainer} from '../views/LayersViewContainer'
+import {LayersStoreHandler} from '../stores/LayersStoreHandler'
 
 /**
  *
@@ -243,6 +244,7 @@ export class ComponentAtmosphereLayers {
   addLayer() {
     return this.__storeHandler.addLayer()
   }
+
   /**
    *
    * @return {Layer}

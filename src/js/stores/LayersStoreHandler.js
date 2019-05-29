@@ -1,4 +1,5 @@
-import {Sequence, globalFlexioImport} from 'flexio-jshelpers'
+import {Sequence} from '@flexio-oss/js-helpers'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 export class LayersStoreHandler {
   /**

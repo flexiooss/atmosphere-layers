@@ -1,4 +1,3 @@
-'use strict'
 import {ViewContainer} from '@flexio-oss/hotballoon'
 import {LayersContainer} from './LayersContainer.view'
 
