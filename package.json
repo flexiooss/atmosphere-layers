@@ -21,7 +21,7 @@
     "@flexio-oss/js-type-helpers": "0.0.0",
     "@flexio-oss/assert": "0.0.0",
     "@flexio-oss/js-helpers": "0.0.0",
-    "@flexio-oss/flex-types": "0.0.0",
+    "@flexio-oss/flex-types": "0.1.0",
     "@flexio-oss/hotballoon": "0.1.0-dev"
   },
   "devDependencies": {
