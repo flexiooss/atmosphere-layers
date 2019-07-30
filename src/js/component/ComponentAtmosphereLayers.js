@@ -5,7 +5,7 @@ import {
   TypeCheck,
   StoreTypeParam,
   ViewContainerParameters,
-  ActionBuilder, ActionParams, ActionTypeParam
+  ActionDispatcherBuilder, ActionTypeConfig, ActionDispatcherConfig
 } from '@flexio-oss/hotballoon'
 import {assertType, isNull, assert} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
@@ -117,9 +117,9 @@ export class ComponentAtmosphereLayers {
      *
      * @type {Action<ChangeLayerOrder>}
      */
-    const action = ActionBuilder.build(
-      new ActionParams(
-        new ActionTypeParam(
+    const action = ActionDispatcherBuilder.build(
+      new ActionTypeConfig(
+        new ActionDispatcherConfig(
           globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder,
           v => v,
           /**
@@ -148,9 +148,9 @@ export class ComponentAtmosphereLayers {
    * @return {Action<RemoveLayer>}
    */
   __initRemoveLayerAction() {
-    const action = ActionBuilder.build(
-      new ActionParams(
-        new ActionTypeParam(
+    const action = ActionDispatcherBuilder.build(
+      new ActionTypeConfig(
+        new ActionDispatcherConfig(
           globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer,
           v => v,
           /**
