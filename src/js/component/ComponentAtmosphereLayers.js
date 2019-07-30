@@ -1,13 +1,15 @@
 import {
-  StoreBuilder,
+  ActionDispatcherBuilder,
+  ActionDispatcherConfig,
+  ActionTypeConfig,
   InMemoryStoreParams,
   PublicStoreHandler,
-  TypeCheck,
+  StoreBuilder,
   StoreTypeParam,
-  ViewContainerParameters,
-  ActionDispatcherBuilder, ActionTypeConfig, ActionDispatcherConfig
+  TypeCheck,
+  ViewContainerParameters
 } from '@flexio-oss/hotballoon'
-import {assertType, isNull, assert} from '@flexio-oss/assert'
+import {assert, assertType, isNull} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {LayersViewContainer} from '../views/LayersViewContainer'
 import {LayersStoreHandler} from '../stores/LayersStoreHandler'
@@ -58,13 +60,13 @@ export class ComponentAtmosphereLayers {
 
     /**
      *
-     * @type {Action<ChangeLayerOrder>}
+     * @type {ActionDispatcher<ChangeLayerOrder>}
      */
     this.changeLayerOrderAction = this.__initChangeLayerOrderAction()
 
     /**
      *
-     * @type {Action<RemoveLayer>}
+     * @type {ActionDispatcher<RemoveLayer>}
      */
     this.removeLayerAction = this.__initRemoveLayerAction()
   }
@@ -110,16 +112,16 @@ export class ComponentAtmosphereLayers {
 
   /**
    *
-   * @return {Action<ChangeLayerOrder>}
+   * @return {ActionDispatcher<ChangeLayerOrder>}
    */
   __initChangeLayerOrderAction() {
     /**
      *
-     * @type {Action<ChangeLayerOrder>}
+     * @type {ActionDispatcher<ChangeLayerOrder>}
      */
     const action = ActionDispatcherBuilder.build(
-      new ActionTypeConfig(
-        new ActionDispatcherConfig(
+      new ActionDispatcherConfig(
+        new ActionTypeConfig(
           globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder,
           v => v,
           /**
@@ -145,12 +147,12 @@ export class ComponentAtmosphereLayers {
 
   /**
    *
-   * @return {Action<RemoveLayer>}
+   * @return {ActionDispatcher<RemoveLayer>}
    */
   __initRemoveLayerAction() {
     const action = ActionDispatcherBuilder.build(
-      new ActionTypeConfig(
-        new ActionDispatcherConfig(
+      new ActionDispatcherConfig(
+        new ActionTypeConfig(
           globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer,
           v => v,
           /**
