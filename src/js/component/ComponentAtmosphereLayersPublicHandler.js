@@ -1,5 +1,4 @@
 import {assertType} from '@flexio-oss/assert'
-import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
 
 const __component = Symbol('__component')
@@ -46,7 +45,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    */
   dispatchRemoveLayerAction(layer) {
     this[__component].removeLayerAction.dispatch(
-      new globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayerBuilder()
+      this[__component].removeLayerAction.payloadBuilder()
         .id(layer.id())
         .build()
     )
@@ -59,7 +58,7 @@ export class ComponentAtmosphereLayersPublicHandler {
    */
   dispatchChangeLayerOrderAction(layer, order) {
     this[__component].changeLayerOrderAction.dispatch(
-      new globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrderBuilder()
+      this[__component].changeLayerOrderAction.payloadBuilder()
         .id(layer.id())
         .order(order)
         .build()

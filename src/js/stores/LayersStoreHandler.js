@@ -4,7 +4,7 @@ import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 export class LayersStoreHandler {
   /**
    *
-   * @param {Store<Layers>} store
+   * @param {Store<Layers, LayersBuilder>} store
    */
   constructor(store) {
     this.__store = store
@@ -40,7 +40,7 @@ export class LayersStoreHandler {
       .pushValue(layer)
       .build()
 
-    const layers = new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
+    const layers = this.__store.dataBuilder()
       .values(values)
       .build()
 
@@ -58,7 +58,7 @@ export class LayersStoreHandler {
     const layers = values.toArray()
     layers.splice(this.__findLayerIndexById(values, payload.id()), 1)
     this.__store.set(
-      new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
+      this.__store.dataBuilder()
         .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder()
           .values(layers)
           .build()
@@ -89,7 +89,7 @@ export class LayersStoreHandler {
     layers.splice(order, 0, layer)
 
     this.__store.set(
-      new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
+      this.__store.dataBuilder()
         .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder()
           .values(layers)
           .build()

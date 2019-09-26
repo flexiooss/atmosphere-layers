@@ -1,13 +1,9 @@
 import {
   ActionDispatcherBuilder,
-  ActionDispatcherConfig,
-  ActionTypeConfig,
-  InMemoryStoreParams,
   PublicStoreHandler,
-  StoreBuilder,
-  StoreTypeParam,
   TypeCheck,
-  ViewContainerParameters
+  ViewContainerParameters,
+  InMemoryStoreBuilder
 } from '@flexio-oss/hotballoon'
 import {assert, assertType, isNull} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
@@ -41,7 +37,7 @@ export class ComponentAtmosphereLayers {
     this.__viewContainer = null
     /**
      *
-     * @type {Store<Layers>}
+     * @type {Store<Layers, LayersBuilder>}
      * @private
      */
     this.__store = this.__initLayersStore()
@@ -60,83 +56,56 @@ export class ComponentAtmosphereLayers {
 
     /**
      *
-     * @type {ActionDispatcher<ChangeLayerOrder>}
+     * @type {ActionDispatcher<ChangeLayerOrder, ChangeLayerOrderBuilder>}
      */
     this.changeLayerOrderAction = this.__initChangeLayerOrderAction()
 
     /**
      *
-     * @type {ActionDispatcher<RemoveLayer>}
+     * @type {ActionDispatcher<RemoveLayer, RemoveLayerBuilder>}
      */
     this.removeLayerAction = this.__initRemoveLayerAction()
   }
 
   /**
    *
-   * @return {Store<Layers>}
+   * @return {Store<Layers, LayersBuilder>}
    */
   __initLayersStore() {
-    return StoreBuilder.InMemory(
-      new InMemoryStoreParams(
-        new StoreTypeParam(
-          globalFlexioImport.io.flexio.atmosphere_layers.stores.Layers,
-          /**
-           *
-           * @param {Layers} data
-           * @return {Layers}
-           */
-          (data) => {
-            return data
-          },
-          /**
-           *
-           * @param {Layers} data
-           * @return {boolean}
-           */
-          (data) => {
-            return true
-          },
-          /**
-           *
-           * @param {Object} obj
-           * @return {Layers}
-           */
-          (obj) => globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder.fromObject(obj).build()
-        ),
+    return new InMemoryStoreBuilder()
+      .type(globalFlexioImport.io.flexio.atmosphere_layers.stores.Layers)
+      .initialData(
         new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
           .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder().build())
           .build()
       )
-    )
+      .build()
   }
 
   /**
    *
-   * @return {ActionDispatcher<ChangeLayerOrder>}
+   * @return {ActionDispatcher<ChangeLayerOrder, ChangeLayerOrderBuilder>}
    */
   __initChangeLayerOrderAction() {
     /**
      *
-     * @type {ActionDispatcher<ChangeLayerOrder>}
+     * @type {ActionDispatcher<ChangeLayerOrder, ChangeLayerOrderBuilder>}
      */
-    const action = ActionDispatcherBuilder.build(
-      new ActionDispatcherConfig(
-        new ActionTypeConfig(
-          globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder,
-          v => v,
-          /**
-           *
-           * @param {ChangeLayerOrder} v
-           */
-          v => {
-            assert(!isNull(v.id()) && v.id() !== '', 'ChangeLayerOrderAction:validator')
-            assert(!isNull(v.order()), 'ChangeLayerOrderAction:validator')
-            return true
-          }
-        ),
-        this.__componentContext.dispatcher()
+    const action = new ActionDispatcherBuilder()
+      .dispatcher(this.__componentContext.dispatcher())
+      .type(globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder)
+      .validator(
+        /**
+         *
+         * @param {ChangeLayerOrder} v
+         */
+        v => {
+          assert(!isNull(v.id()) && v.id() !== '', 'ChangeLayerOrderAction:validator')
+          assert(!isNull(v.order()), 'ChangeLayerOrderAction:validator')
+          return true
+        }
       )
-    )
+      .build()
 
     action.listenWithCallback((payload) => {
       this.__changeLayerOrder(payload)
@@ -147,26 +116,24 @@ export class ComponentAtmosphereLayers {
 
   /**
    *
-   * @return {ActionDispatcher<RemoveLayer>}
+   * @return {ActionDispatcher<RemoveLayer, RemoveLayerBuilder>}
    */
   __initRemoveLayerAction() {
-    const action = ActionDispatcherBuilder.build(
-      new ActionDispatcherConfig(
-        new ActionTypeConfig(
-          globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer,
-          v => v,
-          /**
-           *
-           * @param {RemoveLayer} v
-           */
-          v => {
-            assert(!isNull(v.id()) && v.id() !== '', 'RemoveLayer:validator')
-            return true
-          }
-        ),
-        this.__componentContext.dispatcher()
+    const action = new ActionDispatcherBuilder()
+      .dispatcher(this.__componentContext.dispatcher())
+      .type(globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer)
+      .validator(
+        /**
+         *
+         * @param {RemoveLayer} v
+         */
+        v => {
+          assert(!isNull(v.id()) && v.id() !== '', 'RemoveLayer:validator')
+          return true
+        }
       )
-    )
+      .build()
+
     action.listenWithCallback((payload) => {
       this.__removeLayer(payload)
     })

@@ -1,4 +1,4 @@
-import {assertType} from '@flexio-oss/assert'
+import {assertType, isString, isObject} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {FlexArray} from '@flexio-oss/flex-types'
 
@@ -16,6 +16,41 @@ export class LayerArray extends FlexArray {
    */
   toObject() {
     return this.mapToArray(v => v.toObject())
+  }
+
+  /**
+   *
+   * @return {LayerArrayBuilder}
+   */
+  static builder() {
+    return new LayerArrayBuilder()
+  }
+
+  /**
+   *
+   * @param {string} json
+   * @return {LayerArrayBuilder}
+   */
+  static fromJson(json) {
+    return LayerArrayBuilder.fromJson(json)
+  }
+
+  /**
+   *
+   * @param {Object} jsonObject
+   * @return {LayerArrayBuilder}
+   */
+  static fromObject(jsonObject) {
+    return LayerArrayBuilder.fromObject(jsonObject)
+  }
+
+  /**
+   *
+   * @param {LayerArray} instance
+   * @return {LayerArrayBuilder}
+   */
+  static from(instance) {
+    return LayerArrayBuilder.from(instance)
   }
 }
 
@@ -55,6 +90,7 @@ export class LayerArrayBuilder {
    * @returns {LayerArrayBuilder}
    */
   static fromObject(jsonObject) {
+    assertType(isObject(jsonObject), 'should be Object')
     const builder = new LayerArrayBuilder()
     builder._values = []
     jsonObject.forEach((layer) => {
@@ -68,6 +104,7 @@ export class LayerArrayBuilder {
    * @returns {LayerArrayBuilder}
    */
   static fromJson(json) {
+    assertType(isString(json), 'should be string')
     const jsonObject = JSON.parse(json)
     return this.fromObject(jsonObject)
   }
@@ -77,6 +114,7 @@ export class LayerArrayBuilder {
    * @returns {LayerArrayBuilder}
    */
   static from(instance) {
+    assertType(instance instanceof LayerArray, 'should be LayerArray')
     const builder = new LayerArrayBuilder()
     instance.forEach((layer) => {
       builder.pushValue(globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder.from(layer).build())
