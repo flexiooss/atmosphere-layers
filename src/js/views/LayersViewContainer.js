@@ -6,8 +6,9 @@ export class LayersViewContainer extends ViewContainer {
    *
    * @param {ViewContainerParameters} viewContainerParameters
    * @param {PublicStoreHandler<Layers>} layersStore
+   * @param {LayersStyle} layersStyle
    */
-  constructor(viewContainerParameters, layersStore) {
+  constructor(viewContainerParameters, layersStore,layersStyle) {
     super(viewContainerParameters)
     /**
      *
@@ -15,6 +16,13 @@ export class LayersViewContainer extends ViewContainer {
      * @private
      */
     this.__store = layersStore
+
+    /**
+     *
+     * @type {LayersStyle}
+     * @private
+     */
+    this.__layersStyle = layersStyle
     /**
      *
      * @type {Layers}
@@ -29,7 +37,8 @@ export class LayersViewContainer extends ViewContainer {
     return this.addView(
       new LayersContainer(
         this,
-        this.__store
+        this.__store,
+        this.__layersStyle
       )
     )
   }

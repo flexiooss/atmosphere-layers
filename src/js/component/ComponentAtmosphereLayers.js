@@ -9,6 +9,8 @@ import {assert, assertType, isNull} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {LayersViewContainer} from '../views/LayersViewContainer'
 import {LayersStoreHandler} from '../stores/LayersStoreHandler'
+import {isLayers} from '@flexio-oss/js-style-theme-interface'
+import {TypeCheck as ExtendedTypeCheck} from '@flexio-oss/extended-flex-types'
 
 /**
  * @implements {Component}
@@ -17,14 +19,40 @@ export class ComponentAtmosphereLayers {
   /**
    *
    * @param {ComponentContext} componentContext
+   * @param {Supplier<LayersViewContainer>} layersViewContainerBuilder
+   * @param {LayersStyle} layersStyle
    */
-  constructor(componentContext) {
+  constructor(componentContext, layersViewContainerBuilder, layersStyle) {
     assertType(TypeCheck.isComponentContext(componentContext),
       'ComponentAtmosphereLayers:constructor: `componentContext` argument should be a ComponentContext, %s given',
       typeof componentContext
     )
 
     this.__componentContext = componentContext
+
+    assertType(
+      ExtendedTypeCheck.isSupplier(layersViewContainerBuilder) && layersViewContainerBuilder.isTypeOf(LayersViewContainer),
+      '`layersViewContainerBuilder` should be a LayersViewContainer'
+    )
+
+    /**
+     *
+     * @type {Supplier<LayersViewContainer>}
+     * @private
+     */
+    this.__layersViewContainerBuilder = layersViewContainerBuilder
+
+    assertType(
+      isLayers(layersStyle),
+      '`layersStyle` should be LayersStyle'
+    )
+    /**
+     *
+     * @type {LayersStyle}
+     * @private
+     */
+    this.__layersStyle = layersStyle
+
     /**
      * @type {?Element}
      */
@@ -148,16 +176,18 @@ export class ComponentAtmosphereLayers {
   mountView(parentNode) {
     this.__parentNode = parentNode
 
-    this.__viewContainer = this.__componentContext.addViewContainer(
-      new LayersViewContainer(
-        new ViewContainerParameters(
-          this.__componentContext,
-          this.__componentContext.nextID(),
-          this.__parentNode
-        ),
-        this.publicStoreHandler
+    this.__viewContainer = this.__componentContext
+      .addViewContainer(
+        this.__layersViewContainerBuilder.get(
+          new ViewContainerParameters(
+            this.__componentContext,
+            this.__componentContext.nextID(),
+            this.__parentNode
+          ),
+          this.publicStoreHandler,
+          this.__layersStyle
+        )
       )
-    )
     this.__viewContainer.renderAndMount()
     return this
   }
@@ -213,5 +243,9 @@ export class ComponentAtmosphereLayers {
    */
   __changeLayerOrder(payload) {
     return this.__storeHandler.changeLayerOrder(payload)
+  }
+
+  remove() {
+    this.__componentContext.remove()
   }
 }

@@ -1,5 +1,4 @@
-import { View, e, RECONCILIATION_RULES } from '@flexio-oss/hotballoon'
-import style from '../../assets/style.css'
+import {View, e, RECONCILIATION_RULES} from '@flexio-oss/hotballoon'
 import './LayersElement'
 
 export class LayersContainer extends View {
@@ -7,8 +6,9 @@ export class LayersContainer extends View {
    *
    * @param {ViewContainerBase} container
    * @param {PublicStoreHandler<Layers>} layersStore
+   * @param {LayersStyle} layersStyle
    */
-  constructor(container, layersStore) {
+  constructor(container, layersStore, layersStyle) {
     super(container)
     /**
      *
@@ -16,6 +16,12 @@ export class LayersContainer extends View {
      * @private
      */
     this.__store = layersStore
+    /**
+     *
+     * @type {LayersStyle}
+     * @private
+     */
+    this.__layersStyle = layersStyle
     this.subscribeToStore(this.__store)
   }
 
@@ -26,7 +32,7 @@ export class LayersContainer extends View {
   template() {
     return this.html(
       e('layers-container#main' + this.ID)
-        .className(style.layersContainer)
+        .className(this.__layersStyle.container())
         .childNodes(
           ...this.__layers()
         )
@@ -48,8 +54,8 @@ export class LayersContainer extends View {
         (layer, order) => {
           return this.html(
             e('layers-layer#' + layer.id())
-              .className(style.layersLayer)
-              .bindClassName(style.layersLayerActive, order === 0)
+              .className(this.__layersStyle.layer())
+              .bindClassName(order === 0, this.__layersStyle.layerActive())
               .reconciliationRules(RECONCILIATION_RULES.BYPASS_CHILDREN)
           )
         }
