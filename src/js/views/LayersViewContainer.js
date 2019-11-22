@@ -8,7 +8,7 @@ export class LayersViewContainer extends ViewContainer {
    * @param {PublicStoreHandler<Layers>} layersStore
    * @param {LayersStyle} layersStyle
    */
-  constructor(viewContainerParameters, layersStore,layersStyle) {
+  constructor(viewContainerParameters, layersStore, layersStyle) {
     super(viewContainerParameters)
     /**
      *
@@ -25,14 +25,18 @@ export class LayersViewContainer extends ViewContainer {
     this.__layersStyle = layersStyle
     /**
      *
-     * @type {Layers}
+     * @type {LayersContainer}
      * @private
      */
     this.__viewLayersContainer = this.__registerViewLayoutContainer()
 
-    this.__handleEvents()
   }
 
+  /**
+   *
+   * @return {View}
+   * @private
+   */
   __registerViewLayoutContainer() {
     return this.addView(
       new LayersContainer(
@@ -43,10 +47,6 @@ export class LayersViewContainer extends ViewContainer {
     )
   }
 
-  __handleEvents() {
-
-  }
-
   /**
    *
    * @param id
@@ -54,5 +54,27 @@ export class LayersViewContainer extends ViewContainer {
    */
   getElementByLayerId(id) {
     return this.__viewLayersContainer.nodeRef(id)
+  }
+
+  /**
+   *
+   * @param {Layer} layer
+   * @return {Layer}
+   */
+  addLayer(layer) {
+
+    this.__viewLayersContainer.addLayer(layer)
+    this.__viewLayersContainer.shouldNotUpdate()
+    return layer
+  }
+
+  /**
+   *
+   * @param {string} layerId
+   */
+  removeLayer(layerId) {
+    this.__viewLayersContainer.removeLayer(layerId)
+    this.__viewLayersContainer.shouldNotUpdate()
+
   }
 }

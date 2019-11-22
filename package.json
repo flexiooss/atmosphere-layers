@@ -5,11 +5,17 @@
   "main": "index.js",
   "author": "Thomas Chatelain (https://github.com/TomAchT)",
   "repository": "git@github.com:flexiooss/atmosphere-layers.git",
+  "license": "Apache-2.0",
   "hotballoon-shed": {
-    "builder": "webpack4",
+    "build": {
+      "builder": "webpack4"
+    },
     "test": {
       "tester": "code-altimeter-js",
       "path": "./src/test"
+    },
+    "browserTest": {
+      "path": "src/browserTest"
     },
     "generate-sources": {
       "value-objects": {
@@ -21,6 +27,7 @@
     "@flexio-corp/hotballoon-common-parent": "0.0.0-dev"
   },
   "devDependencies": {
-    "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git"
+    "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git",
+    "@flexio-oss/hotballoon-test-dummies": "1.0.0-dev"
   }
 }

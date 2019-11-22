@@ -14,20 +14,12 @@ export class ComponentAtmosphereLayersPublicHandler {
   }
 
   /**
-   *
-   * @param {Element} parentNode
-   * @return {ComponentAtmosphereLayersPublicHandler}
-   */
-  mountView(parentNode) {
-    this[__component].mountView(parentNode)
-    return this
-  }
-
-  /**
    * @return {Layer}
    */
-  addLayer() {
-    return this[__component].addLayer()
+  addLayer(clb) {
+
+    return this[__component].addLayer(clb)
+
   }
 
   /**

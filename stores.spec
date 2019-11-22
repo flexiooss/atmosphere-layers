@@ -1,5 +1,5 @@
 Layers:
   values:
-    $value-object: io.flexio.atmosphere_layers.types.LayerArray
+    $value-object: io.flexio.atmosphere_layers.types.LayerList
 
 
