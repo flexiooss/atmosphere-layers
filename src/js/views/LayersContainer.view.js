@@ -24,7 +24,7 @@ export class LayersContainer extends View {
      */
     this.__layersStyle = layersStyle
     this.subscribeToStore(this.__store)
-    console.log(this)
+    this.setSynchronous()
 
   }
 
@@ -65,21 +65,6 @@ export class LayersContainer extends View {
       )
   }
 
-  /**
-   *
-   * @param {Layer} layer
-   * @return {Layer}
-   */
-  addLayer(layer) {
-    this.nodeRef('main' + this.ID).appendChild(
-      this.html(
-        e('layers-layer#' + layer.id())
-          .className(this.__layersStyle.layer())
-          .reconciliationRules(RECONCILIATION_RULES.BYPASS_CHILDREN)
-      )
-    )
-    return layer
-  }
 
   /**
    *

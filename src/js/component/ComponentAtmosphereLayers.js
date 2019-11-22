@@ -221,7 +221,7 @@ export class ComponentAtmosphereLayers {
   addLayer() {
     const layer = this.__storeHandler.getNewLayer()
 
-    this.__storeHandler.addLayer(this.__viewContainer.addLayer(layer))
+    this.__storeHandler.addLayer(layer)
     return layer
   }
 
@@ -239,7 +239,6 @@ export class ComponentAtmosphereLayers {
    * @private
    */
   __removeLayer(payload) {
-    this.__viewContainer.removeLayer(payload.id())
 
     this.__storeHandler.removeLayer(payload)
   }

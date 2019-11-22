@@ -56,17 +56,6 @@ export class LayersViewContainer extends ViewContainer {
     return this.__viewLayersContainer.nodeRef(id)
   }
 
-  /**
-   *
-   * @param {Layer} layer
-   * @return {Layer}
-   */
-  addLayer(layer) {
-
-    this.__viewLayersContainer.addLayer(layer)
-    this.__viewLayersContainer.shouldNotUpdate()
-    return layer
-  }
 
   /**
    *
@@ -74,7 +63,5 @@ export class LayersViewContainer extends ViewContainer {
    */
   removeLayer(layerId) {
     this.__viewLayersContainer.removeLayer(layerId)
-    this.__viewLayersContainer.shouldNotUpdate()
-
   }
 }

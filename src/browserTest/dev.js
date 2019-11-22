@@ -12,11 +12,13 @@ const component = ComponentAtmosphereLayersBuilder.build(
 
 const l1 = component.addLayer()
 component.dispatchRemoveLayerAction(l1)
-
 const l2 = component.addLayer()
+debugger
+
 
 const l3 = component.addLayer()
 const l4 = component.addLayer()
+console.log(component.getElementByLayer(l2))
 
 component.getElementByLayer(l2).innerHTML = '<h1>l2</h1>'
 component.getElementByLayer(l3).innerHTML = '<h1>l3</h1>'
