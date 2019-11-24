@@ -1,5 +1,6 @@
 import {assertType} from '@flexio-oss/assert'
 import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
+import {LayerHandler} from './LayerHandler'
 
 const __component = Symbol('__component')
 
@@ -14,11 +15,14 @@ export class ComponentAtmosphereLayersPublicHandler {
   }
 
   /**
-   * @return {Layer}
+   * @return {LayerHandler}
    */
-  addLayer(clb) {
+  addLayer() {
 
-    return this[__component].addLayer(clb)
+    return new LayerHandler(
+      this[__component],
+      this[__component].addLayer()
+    )
 
   }
 

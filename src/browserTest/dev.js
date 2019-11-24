@@ -11,31 +11,31 @@ const component = ComponentAtmosphereLayersBuilder.build(
 )
 
 const l1 = component.addLayer()
-component.dispatchRemoveLayerAction(l1)
+l1.remove()
+
 const l2 = component.addLayer()
 debugger
 
-
 const l3 = component.addLayer()
 const l4 = component.addLayer()
-console.log(component.getElementByLayer(l2))
+console.log(component.getElementByLayer(l2.layer()))
 
-component.getElementByLayer(l2).innerHTML = '<h1>l2</h1>'
-component.getElementByLayer(l3).innerHTML = '<h1>l3</h1>'
-component.getElementByLayer(l4).innerHTML = '<h1>It should be show</h1>'
+l2.getElement().innerHTML = '<h1>l2</h1>'
+l3.getElement().innerHTML = '<h1>l3</h1>'
+l4.getElement().innerHTML = '<h1>It should be show</h1>'
 
-component.showLayer(l3)
-component.showLayer(l2)
-component.showLayer(l4)
+l3.show()
+l2.show()
+l4.show()
 
 debugger
 
 component.hideShowedLayer()
 debugger
-component.getElementByLayer(l2).childNodes.forEach((n) => {
+l2.getElement().childNodes.forEach((n) => {
   console.log(n)
 
 })
+l2.remove()
+l3.remove()
 
-component.dispatchRemoveLayerAction(l2)
-component.dispatchRemoveLayerAction(l3)

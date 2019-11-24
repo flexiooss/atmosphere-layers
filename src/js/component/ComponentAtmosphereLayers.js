@@ -152,6 +152,19 @@ export class ComponentAtmosphereLayers {
 
   /**
    *
+   * @param {function(payload:ChangeLayerOrder )} clb
+   * @return {ComponentAtmosphereLayers}
+   */
+  listenChangeLayerOrder(clb) {
+    this.__componentContext.addActionToken(
+      this.changeLayerOrderAction.listenWithCallback(clb),
+      this.changeLayerOrderAction
+    )
+    return this
+  }
+
+  /**
+   *
    * @return {ActionDispatcher<RemoveLayer, RemoveLayerBuilder>}
    * @private
    */
@@ -171,6 +184,19 @@ export class ComponentAtmosphereLayers {
     )
 
     return action
+  }
+
+  /**
+   *
+   * @param {function(payload:RemoveLayer)} clb
+   * @return {ComponentAtmosphereLayers}
+   */
+  listenRemoveLayer(clb) {
+    this.__componentContext.addActionToken(
+      this.removeLayerAction.listenWithCallback(clb),
+      this.removeLayerAction
+    )
+    return this
   }
 
   /**
