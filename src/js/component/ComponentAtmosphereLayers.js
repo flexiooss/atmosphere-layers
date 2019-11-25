@@ -140,12 +140,12 @@ export class ComponentAtmosphereLayers {
       .validator(new ChangeLayerOrderValidator())
       .build()
 
-    this.__componentContext.addActionToken(
       action.listenWithCallback((payload) => {
         this.__changeLayerOrder(payload)
-      }),
-      action
-    )
+      },
+        this.__componentContext
+      )
+
 
     return action
   }
@@ -156,10 +156,10 @@ export class ComponentAtmosphereLayers {
    * @return {ComponentAtmosphereLayers}
    */
   listenChangeLayerOrder(clb) {
-    this.__componentContext.addActionToken(
-      this.changeLayerOrderAction.listenWithCallback(clb),
-      this.changeLayerOrderAction
-    )
+      this.changeLayerOrderAction.listenWithCallback(
+        clb,
+        this.__componentContext)
+
     return this
   }
 
@@ -176,12 +176,11 @@ export class ComponentAtmosphereLayers {
       )
       .build()
 
-    this.__componentContext.addActionToken(
       action.listenWithCallback((payload) => {
         this.__removeLayer(payload)
-      }),
-      action
-    )
+      },
+        this.__componentContext
+      )
 
     return action
   }
@@ -192,10 +191,10 @@ export class ComponentAtmosphereLayers {
    * @return {ComponentAtmosphereLayers}
    */
   listenRemoveLayer(clb) {
-    this.__componentContext.addActionToken(
-      this.removeLayerAction.listenWithCallback(clb),
-      this.removeLayerAction
-    )
+      this.removeLayerAction.listenWithCallback(
+        clb,
+        this.__componentContext
+      )
     return this
   }
 
