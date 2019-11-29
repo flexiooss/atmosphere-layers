@@ -5,13 +5,13 @@ import {
   ViewContainerParameters,
   InMemoryStoreBuilder
 } from '@flexio-oss/hotballoon'
-import {assert, assertType, isNull, TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
+import {assertType, TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import {LayersViewContainer} from '../views/LayersViewContainer'
 import {LayersStoreHandler} from '../stores/LayersStoreHandler'
 import {isLayers} from '@flexio-oss/js-style-theme-interface'
 import {RemoveLayerValidator} from '../actions/RemoveLayerValidator'
 import {ChangeLayerOrderValidator} from '../actions/ChangeLayerOrderValidator'
+
 
 /**
  * @callback ComponentAtmosphereLayers~LayersViewContainerBuilderClb
@@ -140,12 +140,11 @@ export class ComponentAtmosphereLayers {
       .validator(new ChangeLayerOrderValidator())
       .build()
 
-      action.listenWithCallback((payload) => {
+    action.listenWithCallback((payload) => {
         this.__changeLayerOrder(payload)
       },
-        this.__componentContext
-      )
-
+      this.__componentContext
+    )
 
     return action
   }
@@ -156,9 +155,9 @@ export class ComponentAtmosphereLayers {
    * @return {ComponentAtmosphereLayers}
    */
   listenChangeLayerOrder(clb) {
-      this.changeLayerOrderAction.listenWithCallback(
-        clb,
-        this.__componentContext)
+    this.changeLayerOrderAction.listenWithCallback(
+      clb,
+      this.__componentContext)
 
     return this
   }
@@ -176,11 +175,11 @@ export class ComponentAtmosphereLayers {
       )
       .build()
 
-      action.listenWithCallback((payload) => {
+    action.listenWithCallback((payload) => {
         this.__removeLayer(payload)
       },
-        this.__componentContext
-      )
+      this.__componentContext
+    )
 
     return action
   }
@@ -191,10 +190,10 @@ export class ComponentAtmosphereLayers {
    * @return {ComponentAtmosphereLayers}
    */
   listenRemoveLayer(clb) {
-      this.removeLayerAction.listenWithCallback(
-        clb,
-        this.__componentContext
-      )
+    this.removeLayerAction.listenWithCallback(
+      clb,
+      this.__componentContext
+    )
     return this
   }
 
