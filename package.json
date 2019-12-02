@@ -15,7 +15,7 @@
       "path": "./src/test"
     },
     "browserTest": {
-      "path": "src/browserTest"
+      "path": "src/test/dev"
     },
     "generate-sources": {
       "value-objects": {

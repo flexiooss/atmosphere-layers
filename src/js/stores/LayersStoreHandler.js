@@ -2,6 +2,7 @@ import {Sequence} from '@flexio-oss/js-helpers'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {isUndefined} from '@flexio-oss/assert'
 
+
 export class LayersStoreHandler {
   /**
    *
@@ -114,10 +115,10 @@ export class LayersStoreHandler {
 
   /**
    *
-   * @return {Layer}
+   * @return {?Layer}
    */
   currentShowedLayer() {
-    return this.__layers().values().first()
+    return (this.__layersList().length) ? this.__layersList().first() : null
   }
 
   /**

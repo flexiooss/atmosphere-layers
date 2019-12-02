@@ -5,7 +5,7 @@ import {
   ViewContainerParameters,
   InMemoryStoreBuilder
 } from '@flexio-oss/hotballoon'
-import {assertType, TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
+import {assertType, isNull, TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {LayersStoreHandler} from '../stores/LayersStoreHandler'
 import {isLayers} from '@flexio-oss/js-style-theme-interface'
@@ -141,12 +141,46 @@ export class ComponentAtmosphereLayers {
       .build()
 
     action.listenWithCallback((payload) => {
+
+        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id()
+
         this.__changeLayerOrder(payload)
+
+        this.__restoreFocusAndScroll(payload.id(), isCurrentShowed)
+
       },
       this.__componentContext
     )
 
     return action
+  }
+
+  /**
+   *
+   * @param {string} layerId
+   * @param {boolean} wasCurrentShowed
+   * @return {ComponentAtmosphereLayers}
+   * @private
+   */
+  __restoreFocusAndScroll(layerId, wasCurrentShowed) {
+    if (!wasCurrentShowed) {
+
+      /**
+       *
+       * @type {?Layer}
+       */
+      const showedLayer = this.__storeHandler.currentShowedLayer()
+
+      /**
+       * @type {?Element}
+       */
+      const focusable = this.getElementByLayerId(showedLayer.id()).querySelector('[tabindex]:not([tabindex="-1"])')
+      if (!isNull(focusable)) {
+        focusable.focus()
+      }
+    }
+
+    return this
   }
 
   /**

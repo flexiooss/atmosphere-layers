@@ -3,8 +3,10 @@ import {assertType} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {TypeCheck} from '@flexio-oss/hotballoon'
 
+
 const __layer = Symbol('__layer')
 const __component = Symbol('__component')
+
 
 export class LayerHandler {
   /**
@@ -107,7 +109,7 @@ export class LayerHandler {
   listenShow(clb) {
     this[__component].listenChangeLayerOrder(
       (payload) => {
-        if (payload.id() === this.layer().id() && !this.isShowed() && payload.order() === 0) {
+        if (payload.id() === this.layer().id() && payload.order() === 0) {
           clb(payload)
         }
       }
