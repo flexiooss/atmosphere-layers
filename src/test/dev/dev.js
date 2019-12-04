@@ -1,6 +1,6 @@
 import '../../../generated/io/package.js'
 import {ApplicationWithStyle} from '@flexio-oss/hotballoon-test-dummies'
-import {ComponentAtmosphereLayersBuilder} from '../js/ComponentAtmosphereLayersBuilder'
+import {ComponentAtmosphereLayersBuilder} from '../../js/ComponentAtmosphereLayersBuilder'
 
 const applicationWithStyle = ApplicationWithStyle.withConsoleLogger()
 

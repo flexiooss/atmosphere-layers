@@ -18,7 +18,7 @@ export class LayersStoreHandler {
    * @private
    */
   __layers() {
-    return this.__store.state().data
+    return this.__store.state().data()
   }
 
   /**

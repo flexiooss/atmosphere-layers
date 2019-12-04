@@ -34,7 +34,7 @@ export class LayersContainer extends View {
    */
   template() {
     return this.html(
-      e('layers-container#main' + this.ID)
+      e('layers-container#main' + this.ID())
         .className(this.__layersStyle.container())
         .childNodes(
           ...this.__layers()
