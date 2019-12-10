@@ -18,7 +18,7 @@
     }
   },
   "dependencies": {
-    "@flexio-corp/hotballoon-common-parent": "0.0.0-dev"
+    "@flexio-corp/hotballoon-common-parent": "0.0.0"
   },
   "devDependencies": {
     "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git"
