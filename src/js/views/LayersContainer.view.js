@@ -1,5 +1,6 @@
 import {View, e, RECONCILIATION_RULES} from '@flexio-oss/hotballoon'
 import './LayersElement'
+import {removeChildNodes} from '@flexio-oss/js-type-helpers'
 
 export class LayersContainer extends View {
   /**
@@ -23,6 +24,8 @@ export class LayersContainer extends View {
      */
     this.__layersStyle = layersStyle
     this.subscribeToStore(this.__store)
+    this.setSynchronous()
+
   }
 
   /**
@@ -31,7 +34,7 @@ export class LayersContainer extends View {
    */
   template() {
     return this.html(
-      e('layers-container#main' + this.ID)
+      e('layers-container#main' + this.ID())
         .className(this.__layersStyle.container())
         .childNodes(
           ...this.__layers()
@@ -60,5 +63,17 @@ export class LayersContainer extends View {
           )
         }
       )
+  }
+
+
+  /**
+   *
+   * @param {string} layerId
+   */
+  removeLayer(layerId) {
+    removeChildNodes(
+      this.nodeRef(layerId)
+    )
+
   }
 }

@@ -1,5 +1,7 @@
 import {Sequence} from '@flexio-oss/js-helpers'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {isUndefined} from '@flexio-oss/assert'
+
 
 export class LayersStoreHandler {
   /**
@@ -16,7 +18,7 @@ export class LayersStoreHandler {
    * @private
    */
   __layers() {
-    return this.__store.state().data
+    return this.__store.state().data()
   }
 
   /**
@@ -25,20 +27,26 @@ export class LayersStoreHandler {
    * @private
    */
   __maxOrder() {
-    return this.__layers().values().length > 0 ? this.__layers().values().length - 1 : 0
+    return this.__layersList().length > 0 ? this.__layersList().length - 1 : 0
+  }
+
+  /**
+   *
+   * @return {Layer}
+   */
+  getNewLayer() {
+    return new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder()
+      .id(this.__sequence.nextID())
+      .build()
   }
 
   /**
    * @return {Layer}
    */
-  addLayer() {
-    const layer = new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder()
-      .id(this.__sequence.nextID())
-      .build()
+  addLayer(layer) {
 
-    const values = this.__layersFromCurrentBuilder()
-      .pushValue(layer)
-      .build()
+    const values = this.__layersList()
+    values.push(layer)
 
     const layers = this.__store.dataBuilder()
       .values(values)
@@ -54,14 +62,13 @@ export class LayersStoreHandler {
    * @param {RemoveLayer} payload
    */
   removeLayer(payload) {
-    const values = this.__layersFromCurrentBuilder().build()
-    const layers = values.toArray()
-    layers.splice(this.__findLayerIndexById(values, payload.id()), 1)
+    const values = this.__layersList()
+
     this.__store.set(
       this.__store.dataBuilder()
-        .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder()
-          .values(layers)
-          .build()
+        .values(
+          this.__layersList()
+            .splice(this.__findLayerIndexById(values, payload.id()), 1)
         )
         .build()
     )
@@ -73,7 +80,7 @@ export class LayersStoreHandler {
    */
   changeLayerOrder(payload) {
     let order = payload.order()
-    const values = this.__layersFromCurrentBuilder().build()
+    const values = this.__layersList()
 
     if (order < 0) {
       order = 0
@@ -90,9 +97,7 @@ export class LayersStoreHandler {
 
     this.__store.set(
       this.__store.dataBuilder()
-        .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder()
-          .values(layers)
-          .build()
+        .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerList(...layers)
         )
         .build()
     )
@@ -105,30 +110,29 @@ export class LayersStoreHandler {
    * @throws {RangeError}
    */
   orderByLayerId(id) {
-    return this.__findLayerIndexById(this.__layers().values(), id)
+    return this.__findLayerIndexById(this.__layersList(), id)
   }
 
   /**
    *
-   * @return {Layer}
+   * @return {?Layer}
    */
   currentShowedLayer() {
-    return this.__layers().values().first()
+    return (this.__layersList().length) ? this.__layersList().first() : null
   }
 
   /**
    *
-   * @return {LayerArrayBuilder}
+   * @return {LayerList}
    * @private
    */
-  __layersFromCurrentBuilder() {
-    return globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder
-      .from(this.__layers().values())
+  __layersList() {
+    return this.__layers().values()
   }
 
   /**
    *
-   * @param {LayerArray} layerArray
+   * @param {LayerList} layerArray
    * @param {string} id
    * @return {number}
    * @throws {RangeError}
@@ -144,7 +148,7 @@ export class LayersStoreHandler {
 
   /**
    *
-   * @param {LayerArray} layerArray
+   * @param {LayerList} layerArray
    * @param {string} id
    * @return {Layer}
    * @throws {RangeError}
@@ -152,7 +156,7 @@ export class LayersStoreHandler {
    */
   __findLayerById(layerArray, id) {
     const layer = layerArray.find(current => current.id() === id)
-    if (layer === undefined) {
+    if (isUndefined(layer)) {
       throw new RangeError('Layer not found : ' + id)
     }
     return layer
