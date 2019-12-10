@@ -1,38 +1,25 @@
 import {
-  StoreBuilder,
-  InMemoryStoreParams,
+  ActionDispatcherBuilder,
   PublicStoreHandler,
   TypeCheck,
-  StoreTypeParam,
   ViewContainerParameters,
-  ActionBuilder, ActionParams, ActionTypeParam
-} from 'hotballoon'
-import { assertType, globalFlexioImport, isNull, assert } from 'flexio-jshelpers'
-import { LayersViewContainer } from '../views/LayersViewContainer'
-import { LayersStoreHandler } from '../stores/LayersStoreHandler'
+  InMemoryStoreBuilder
+} from '@flexio-oss/hotballoon'
+import {assertType, isNull, TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {LayersStoreHandler} from '../stores/LayersStoreHandler'
+import {isLayers} from '@flexio-oss/js-style-theme-interface'
+import {RemoveLayerValidator} from '../actions/RemoveLayerValidator'
+import {ChangeLayerOrderValidator} from '../actions/ChangeLayerOrderValidator'
+
 
 /**
- *
- * @type {Layers}
+ * @callback ComponentAtmosphereLayers~LayersViewContainerBuilderClb
+ * @param {ViewContainerParameters} viewContainerParameters
+ * @param {PublicStoreHandler<Layers>} layersStore
+ * @param {LayersStyle} layersStyle
+ * @return {LayersViewContainer}
  */
-const Layers = globalFlexioImport.io.flexio.atmosphere_layers.stores.Layers
-
-/**
- *
- * @type {LayersBuilder}
- */
-const LayersBuilder = globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder
-
-/**
- *
- * @type {ChangeLayerOrder}
- */
-const ChangeLayerOrder = globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder
-/**
- *
- * @type {RemoveLayer}
- */
-const RemoveLayer = globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer
 
 /**
  * @implements {Component}
@@ -41,18 +28,43 @@ export class ComponentAtmosphereLayers {
   /**
    *
    * @param {ComponentContext} componentContext
+   * @param {ComponentAtmosphereLayers~LayersViewContainerBuilderClb} layersViewContainerBuilder
+   * @param {LayersStyle} layersStyle
+   * @param {Element} parentNode
    */
-  constructor(componentContext) {
+  constructor(componentContext, layersViewContainerBuilder, layersStyle, parentNode) {
     assertType(TypeCheck.isComponentContext(componentContext),
       'ComponentAtmosphereLayers:constructor: `componentContext` argument should be a ComponentContext, %s given',
       typeof componentContext
     )
 
     this.__componentContext = componentContext
+
+    PrimitiveTypeCheck.assertIsFunction(layersViewContainerBuilder)
+
     /**
-     * @type {?Element}
+     *
+     * @type {ComponentAtmosphereLayers~LayersViewContainerBuilderClb}
+     * @private
      */
-    this.__parentNode = null
+    this.__layersViewContainerBuilder = layersViewContainerBuilder
+
+    assertType(
+      isLayers(layersStyle),
+      '`layersStyle` should be LayersStyle'
+    )
+    /**
+     *
+     * @type {LayersStyle}
+     * @private
+     */
+    this.__layersStyle = layersStyle
+
+    PrimitiveTypeCheck.assertIsNode(parentNode)
+    /**
+     * @type {Element}
+     */
+    this.__parentNode = parentNode
     /**
      *
      * @type {?LayersViewContainer}
@@ -61,7 +73,7 @@ export class ComponentAtmosphereLayers {
     this.__viewContainer = null
     /**
      *
-     * @type {Store<Layers>}
+     * @type {Store<Layers,LayersBuilder>}
      * @private
      */
     this.__store = this.__initLayersStore()
@@ -80,138 +92,165 @@ export class ComponentAtmosphereLayers {
 
     /**
      *
-     * @type {Action<ChangeLayerOrder>}
+     * @type {ActionDispatcher<ChangeLayerOrder, ChangeLayerOrderBuilder>}
      */
     this.changeLayerOrderAction = this.__initChangeLayerOrderAction()
 
     /**
      *
-     * @type {Action<RemoveLayer>}
+     * @type {ActionDispatcher<RemoveLayer, RemoveLayerBuilder>}
      */
     this.removeLayerAction = this.__initRemoveLayerAction()
+
+    this.__mountView()
   }
 
   /**
    *
-   * @return {Store<Layers>}
+   * @return {Store<Layers, LayersBuilder>}
+   * @private
    */
   __initLayersStore() {
-    return StoreBuilder.InMemory(
-      new InMemoryStoreParams(
-        new StoreTypeParam(
-          Layers,
-          /**
-           *
-           * @param {Layers} data
-           * @return {Layers}
-           */
-          (data) => {
-            return data
-          },
-          /**
-           *
-           * @param {Layers} data
-           * @return {boolean}
-           */
-          (data) => {
-            return true
-          },
-          /**
-           *
-           * @param {Object} obj
-           * @return {Layers}
-           */
-          (obj) => LayersBuilder.fromObject(obj).build()
-        ),
-        new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
-          .values(new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerArrayBuilder().build())
-          .build()
-      )
+    return this.__componentContext.addStore(
+      new InMemoryStoreBuilder()
+        .type(globalFlexioImport.io.flexio.atmosphere_layers.stores.Layers)
+        .initialData(
+          new globalFlexioImport.io.flexio.atmosphere_layers.stores.LayersBuilder()
+            .values(
+              new globalFlexioImport.io.flexio.atmosphere_layers.types.LayerList()
+            ).build()
+        )
+        .build()
     )
   }
 
   /**
    *
-   * @return {Action<ChangeLayerOrder>}
+   * @return {ActionDispatcher<ChangeLayerOrder, ChangeLayerOrderBuilder>}
+   * @private
    */
   __initChangeLayerOrderAction() {
     /**
      *
-     * @type {Action<ChangeLayerOrder>}
+     * @type {ActionDispatcher<ChangeLayerOrder, ChangeLayerOrderBuilder>}
      */
-    const action = ActionBuilder.build(
-      new ActionParams(
-        new ActionTypeParam(
-          ChangeLayerOrder,
-          v => v,
-          /**
-           *
-           * @param {ChangeLayerOrder} v
-           */
-          v => {
-            assert(!isNull(v.id()) && v.id() !== '', 'ChangeLayerOrderAction:validator')
-            assert(!isNull(v.order()), 'ChangeLayerOrderAction:validator')
-            return true
-          }
-        ),
-        this.__componentContext.dispatcher()
-      )
-    )
+    const action = new ActionDispatcherBuilder()
+      .dispatcher(this.__componentContext.dispatcher())
+      .type(globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrder)
+      .validator(new ChangeLayerOrderValidator())
+      .build()
 
     action.listenWithCallback((payload) => {
-      this.__changeLayerOrder(payload)
-    })
+
+        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id()
+
+        this.__changeLayerOrder(payload)
+
+        this.__restoreFocusAndScroll(payload.id(), isCurrentShowed)
+
+      },
+      this.__componentContext
+    )
 
     return action
   }
 
   /**
    *
-   * @return {Action<RemoveLayer>}
+   * @param {string} layerId
+   * @param {boolean} wasCurrentShowed
+   * @return {ComponentAtmosphereLayers}
+   * @private
+   */
+  __restoreFocusAndScroll(layerId, wasCurrentShowed) {
+    if (!wasCurrentShowed) {
+
+      /**
+       *
+       * @type {?Layer}
+       */
+      const showedLayer = this.__storeHandler.currentShowedLayer()
+
+      /**
+       * @type {?Element}
+       */
+      const focusable = this.getElementByLayerId(showedLayer.id()).querySelector('[tabindex]:not([tabindex="-1"])')
+      if (!isNull(focusable)) {
+        focusable.focus()
+      }
+    }
+
+    return this
+  }
+
+  /**
+   *
+   * @param {function(payload:ChangeLayerOrder )} clb
+   * @return {ComponentAtmosphereLayers}
+   */
+  listenChangeLayerOrder(clb) {
+    this.changeLayerOrderAction.listenWithCallback(
+      clb,
+      this.__componentContext)
+
+    return this
+  }
+
+  /**
+   *
+   * @return {ActionDispatcher<RemoveLayer, RemoveLayerBuilder>}
+   * @private
    */
   __initRemoveLayerAction() {
-    const action = ActionBuilder.build(
-      new ActionParams(
-        new ActionTypeParam(
-          RemoveLayer,
-          v => v,
-          /**
-           *
-           * @param {RemoveLayer} v
-           */
-          v => {
-            assert(!isNull(v.id()) && v.id() !== '', 'RemoveLayer:validator')
-            return true
-          }
-        ),
-        this.__componentContext.dispatcher()
+    const action = new ActionDispatcherBuilder()
+      .dispatcher(this.__componentContext.dispatcher())
+      .type(globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer)
+      .validator(new RemoveLayerValidator()
       )
-    )
+      .build()
+
     action.listenWithCallback((payload) => {
-      this.__removeLayer(payload)
-    })
+        this.__removeLayer(payload)
+      },
+      this.__componentContext
+    )
 
     return action
   }
 
   /**
-   * @param {Element} parentNode
+   *
+   * @param {function(payload:RemoveLayer)} clb
    * @return {ComponentAtmosphereLayers}
    */
-  mountView(parentNode) {
-    this.__parentNode = parentNode
-
-    this.__viewContainer = this.__componentContext.addViewContainer(
-      new LayersViewContainer(
-        new ViewContainerParameters(
-          this.__componentContext,
-          this.__componentContext.nextID(),
-          this.__parentNode
-        ),
-        this.publicStoreHandler
-      )
+  listenRemoveLayer(clb) {
+    this.removeLayerAction.listenWithCallback(
+      clb,
+      this.__componentContext
     )
+    return this
+  }
+
+  /**
+   * @return {ComponentAtmosphereLayers}
+   * @private
+   */
+  __mountView() {
+
+    this.__viewContainer = this.__componentContext
+      .addViewContainer(
+        this.__layersViewContainerBuilder(
+          new ViewContainerParameters(
+            this.__componentContext,
+            this.__componentContext.nextID(),
+            this.__parentNode
+          ),
+          this.publicStoreHandler,
+          this.__layersStyle
+        )
+      )
     this.__viewContainer.renderAndMount()
+
     return this
   }
 
@@ -221,9 +260,6 @@ export class ComponentAtmosphereLayers {
    * @return {?Element}
    */
   getElementByLayerId(id) {
-    if (isNull(this.__viewContainer)) {
-      return null
-    }
     return this.__viewContainer.getElementByLayerId(id)
   }
 
@@ -241,22 +277,40 @@ export class ComponentAtmosphereLayers {
    * @return {Layer}
    */
   addLayer() {
-    return this.__storeHandler.addLayer()
+    const layer = this.__storeHandler.getNewLayer()
+
+    this.__storeHandler.addLayer(layer)
+    return layer
+  }
+
+  /**
+   *
+   * @return {Layer}
+   */
+  currentShowedLayer() {
+    return this.__storeHandler.currentShowedLayer()
   }
 
   /**
    *
    * @param {RemoveLayer} payload
+   * @private
    */
   __removeLayer(payload) {
-    return this.__storeHandler.removeLayer(payload)
+
+    this.__storeHandler.removeLayer(payload)
   }
 
   /**
    *
    * @param {ChangeLayerOrder} payload
+   * @private
    */
   __changeLayerOrder(payload) {
     return this.__storeHandler.changeLayerOrder(payload)
+  }
+
+  remove() {
+    this.__componentContext.remove()
   }
 }

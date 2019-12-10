@@ -1,5 +1,6 @@
-import { assertType, globalFlexioImport } from 'flexio-jshelpers'
-import { ComponentAtmosphereLayers } from './ComponentAtmosphereLayers'
+import {assertType} from '@flexio-oss/assert'
+import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
+import {LayerHandler} from './LayerHandler'
 
 const __component = Symbol('__component')
 
@@ -14,80 +15,87 @@ export class ComponentAtmosphereLayersPublicHandler {
   }
 
   /**
-   *
-   * @param {Element} parentNode
-   * @return {ComponentAtmosphereLayersPublicHandler}
-   */
-  mountView(parentNode) {
-    this[__component].mountView(parentNode)
-    return this
-  }
-
-  /**
-   * @return {Layer}
+   * @return {LayerHandler}
    */
   addLayer() {
-    return this[__component].addLayer()
+
+    return new LayerHandler(
+      this[__component],
+      this[__component].addLayer()
+    )
+
   }
 
   /**
    *
-   * @param {string} id
+   * @param {Layer} layer
    * @return {?Element}
    */
-  getElementByLayerId(id) {
-    return this[__component].getElementByLayerId(id)
+  getElementByLayer(layer) {
+    return this[__component].getElementByLayerId(layer.id())
   }
 
   /**
    *
-   * @param {string} id
+   * @param {Layer} layer
    */
-  dispatchRemoveLayerAction(id) {
+  dispatchRemoveLayerAction(layer) {
     this[__component].removeLayerAction.dispatch(
-      new globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayerBuilder()
-        .id(id)
+      this[__component].removeLayerAction.payloadBuilder()
+        .id(layer.id())
         .build()
     )
   }
 
   /**
    *
-   * @param {string} id
+   * @param {Layer} layer
    * @param {number} order
    */
-  dipatchChangeLayerOrderAction(id, order) {
+  dispatchChangeLayerOrderAction(layer, order) {
     this[__component].changeLayerOrderAction.dispatch(
-      new globalFlexioImport.io.flexio.atmosphere_layers.actions.ChangeLayerOrderBuilder()
-        .id(id)
+      this[__component].changeLayerOrderAction.payloadBuilder()
+        .id(layer.id())
         .order(order)
         .build()
     )
   }
 
-  /**
-   *
-   * @param {string} id
-   */
-  showLayer(id) {
-    this.dipatchChangeLayerOrderAction(id, 0)
+  hideShowedLayer() {
+    this.dispatchChangeLayerOrderAction(this[__component].currentShowedLayer(), 1)
   }
 
   /**
    *
-   * @param {string} id
+   * @return {Layer}
+   */
+  getShowedLayer() {
+    return this[__component].currentShowedLayer()
+  }
+
+  /**
+   *
+   * @param {Layer} layer
+   */
+  showLayer(layer) {
+    this.dispatchChangeLayerOrderAction(layer, 0)
+  }
+
+  /**
+   *
+   * @param {Layer} layer
    * @return {?number}
    * @throws {RangeError}
    */
-  orderByLayerId(id) {
-    return this[__component].orderByLayerId(id)
+  getLayerOrder(layer) {
+    return this[__component].orderByLayerId(layer.id())
   }
 
   /**
    *
    * @return {PublicStoreHandler<Layers>}
    */
-  subscribeToStore(clb) {
+  store() {
     return this[__component].publicStoreHandler
   }
 }
