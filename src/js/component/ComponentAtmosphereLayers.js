@@ -146,11 +146,13 @@ export class ComponentAtmosphereLayers {
 
     action.listenWithCallback((payload) => {
 
-        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id()
+        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id() && payload.order() === 0
 
         this.__changeLayerOrder(payload)
 
-        this.__restoreFocusAndScroll(payload.id(), isCurrentShowed)
+        if (!isCurrentShowed) {
+          this.__restoreFocusAndScroll()
+        }
 
       },
       this.__componentContext
@@ -161,44 +163,39 @@ export class ComponentAtmosphereLayers {
 
   /**
    *
-   * @param {string} layerId
-   * @param {boolean} wasCurrentShowed
    * @return {ComponentAtmosphereLayers}
    * @private
    */
-  __restoreFocusAndScroll(layerId, wasCurrentShowed) {
-    if (!wasCurrentShowed) {
+  __restoreFocusAndScroll() {
 
-      /**
-       * @type {?Layer}
-       */
-      const showedLayer = this.__storeHandler.currentShowedLayer()
-      /**
-       * @type {?Element}
-       */
-      const layerElement = this.getElementByLayerId(showedLayer.id())
+    /**
+     * @type {?Layer}
+     */
+    const showedLayer = this.__storeHandler.currentShowedLayer()
+    /**
+     * @type {?Element}
+     */
+    const layerElement = this.getElementByLayerId(showedLayer.id())
 
-      /**
-       * @type {?Element}
-       */
-      let activeElement = null
+    /**
+     * @type {?Element}
+     */
+    let activeElement = null
 
-      if (!isNull(showedLayer.activeElementId())) {
-        activeElement = this.__document.getElementById(showedLayer.activeElementId())
-      }
-      if (isNull(activeElement)) {
-        activeElement = layerElement.querySelector('[tabindex]:not([tabindex="-1"])')
-      }
-      if (!isNull(activeElement)) {
-        activeElement.focus()
-      }
-
-      if (!isNull(showedLayer.scrollLeft())) {
-        layerElement.scrollLeft = showedLayer.scrollLeft()
-      }
-      if (!isNull(showedLayer.scrollTop())) {
-        layerElement.scrollTop = showedLayer.scrollTop()
-      }
+    if (!isNull(showedLayer.activeElementId())) {
+      activeElement = this.__document.getElementById(showedLayer.activeElementId())
+    }
+    if (isNull(activeElement)) {
+      activeElement = layerElement.querySelector('[tabindex]:not([tabindex="-1"])')
+    }
+    if (!isNull(activeElement)) {
+      activeElement.focus()
+    }
+    if (!isNull(showedLayer.scrollLeft())) {
+      layerElement.scrollLeft = showedLayer.scrollLeft()
+    }
+    if (!isNull(showedLayer.scrollTop())) {
+      layerElement.scrollTop = showedLayer.scrollTop()
     }
 
     return this
@@ -231,7 +228,13 @@ export class ComponentAtmosphereLayers {
       .build()
 
     action.listenWithCallback((payload) => {
+        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id()
+
         this.__removeLayer(payload)
+
+        if (isCurrentShowed) {
+          this.__restoreFocusAndScroll()
+        }
       },
       this.__componentContext
     )
