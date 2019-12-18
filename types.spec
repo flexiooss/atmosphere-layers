@@ -1,5 +1,5 @@
 Layer:
   id: string
-  scrollLeft: int
-  scrollTop: int
+  scrollLeft: float
+  scrollTop: float
   activeElementId: string
