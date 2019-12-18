@@ -1,6 +1,7 @@
 import {Sequence} from '@flexio-oss/js-helpers'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {isUndefined} from '@flexio-oss/assert'
+import {isNull} from '../../../../../../../assert'
 
 
 export class LayersStoreHandler {
@@ -77,8 +78,9 @@ export class LayersStoreHandler {
   /**
    *
    * @param {ChangeLayerOrder} payload
+   * @param {?Layer} firstLayer
    */
-  changeLayerOrder(payload) {
+  changeLayerOrder(payload, firstLayer) {
     let order = payload.order()
     const values = this.__layersList()
 
@@ -91,6 +93,10 @@ export class LayersStoreHandler {
     const layerIndex = this.__findLayerIndexById(values, payload.id())
     const layer = values.get(layerIndex)
     const layers = values.toArray()
+
+    if (!isNull(firstLayer)) {
+      layers.splice(0, 1, firstLayer)
+    }
 
     layers.splice(layerIndex, 1)
     layers.splice(order, 0, layer)
