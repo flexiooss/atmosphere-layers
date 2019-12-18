@@ -1,7 +1,6 @@
 import {Sequence} from '@flexio-oss/js-helpers'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import {isUndefined} from '@flexio-oss/assert'
-import {isNull} from '../../../../../../../assert'
+import {isUndefined,isNull} from '@flexio-oss/assert'
 
 
 export class LayersStoreHandler {
