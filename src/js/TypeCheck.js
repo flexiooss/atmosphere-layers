@@ -1,6 +1,6 @@
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import {ComponentAtmosphereLayersPublicHandler} from './component/ComponentAtmosphereLayersPublicHandler'
 import {TypeCheck as HotballonTypeCheck} from '@flexio-oss/hotballoon'
+import {ComponentAtmosphereLayersPublicHandlerInterface} from './component/ComponentAtmosphereLayersPublicHandlerInterface'
 
 export class TypeCheck {
   /**
@@ -18,7 +18,7 @@ export class TypeCheck {
    * @return {boolean}
    */
   static isComponentAtmosphereLayersPublicHandler(inst) {
-    return inst instanceof ComponentAtmosphereLayersPublicHandler
+    return inst instanceof ComponentAtmosphereLayersPublicHandlerInterface
   }
 
   /**

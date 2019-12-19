@@ -1,15 +1,22 @@
 import {assertType} from '@flexio-oss/assert'
 import {ComponentAtmosphereLayers} from './ComponentAtmosphereLayers'
 import {LayerHandler} from './LayerHandler'
+import {ComponentAtmosphereLayersPublicHandlerInterface} from './ComponentAtmosphereLayersPublicHandlerInterface'
+
 
 const __component = Symbol('__component')
 
-export class ComponentAtmosphereLayersPublicHandler {
+
+/**
+ * @implements {ComponentAtmosphereLayersPublicHandlerInterface}
+ */
+export class ComponentAtmosphereLayersPublicHandler extends ComponentAtmosphereLayersPublicHandlerInterface {
   /**
    *
    * @param {ComponentAtmosphereLayers} component
    */
   constructor(component) {
+    super()
     assertType(component instanceof ComponentAtmosphereLayers, 'ComponentAtmosphereLayersPublicHandler:constructor: component argument should be an instanceof ComponentAtmosphereLayers')
     this[__component] = component
   }

@@ -16,3 +16,5 @@ deepKeyAssigner(globalFlexioImport, 'io.flexio.atmosphere_layers.types.LayerArra
 export {ComponentAtmosphereLayersBuilder} from './src/js/ComponentAtmosphereLayersBuilder'
 
 export {TypeCheck} from './src/js/TypeCheck'
+
+export {FakeComponentAtmosphereLayersPublicHandler} from './src/test/FakeComponentAtmosphereLayersPublicHandler'
