@@ -172,6 +172,7 @@ export class ComponentAtmosphereLayers {
      * @type {?Layer}
      */
     const showedLayer = this.__storeHandler.currentShowedLayer()
+
     /**
      * @type {?Element}
      */
@@ -188,7 +189,7 @@ export class ComponentAtmosphereLayers {
     if (isNull(activeElement)) {
       activeElement = layerElement.querySelector('[tabindex]:not([tabindex="-1"])')
     }
-    if (!isNull(activeElement)) {
+    if (!isNull(activeElement) && activeElement !== this.__document.activeElement) {
       activeElement.focus()
     }
     if (!isNull(showedLayer.scrollLeft())) {
@@ -223,18 +224,14 @@ export class ComponentAtmosphereLayers {
     const action = new ActionDispatcherBuilder()
       .dispatcher(this.__componentContext.dispatcher())
       .type(globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer)
-      .validator(new RemoveLayerValidator()
-      )
+      .validator(new RemoveLayerValidator())
       .build()
 
     action.listenWithCallback((payload) => {
         const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id()
 
         this.__removeLayer(payload)
-
-        if (isCurrentShowed) {
-          this.__restoreFocusAndScroll()
-        }
+        this.__restoreFocusAndScroll()
       },
       this.__componentContext
     )
