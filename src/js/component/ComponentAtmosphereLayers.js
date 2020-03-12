@@ -1,14 +1,12 @@
 import {
   ActionDispatcherBuilder,
   PublicStoreHandler,
-  TypeCheck,
   ViewContainerParameters,
   InMemoryStoreBuilder
 } from '@flexio-oss/hotballoon'
-import {assertType, isNull, TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
+import {isNull, isString} from '@flexio-oss/assert'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {LayersStoreHandler} from '../stores/LayersStoreHandler'
-import {isLayers} from '@flexio-oss/js-style-theme-interface'
 import {RemoveLayerValidator} from '../actions/RemoveLayerValidator'
 import {ChangeLayerOrderValidator} from '../actions/ChangeLayerOrderValidator'
 
@@ -31,16 +29,16 @@ export class ComponentAtmosphereLayers {
    * @param {ComponentAtmosphereLayers~LayersViewContainerBuilderClb} layersViewContainerBuilder
    * @param {LayersStyle} layersStyle
    * @param {Element} parentNode
+   * @param {document} document
    */
-  constructor(componentContext, layersViewContainerBuilder, layersStyle, parentNode) {
-    assertType(TypeCheck.isComponentContext(componentContext),
-      'ComponentAtmosphereLayers:constructor: `componentContext` argument should be a ComponentContext, %s given',
-      typeof componentContext
-    )
+  constructor(componentContext, layersViewContainerBuilder, layersStyle, parentNode, document) {
 
+    /**
+     *
+     * @type {ComponentContext}
+     * @private
+     */
     this.__componentContext = componentContext
-
-    PrimitiveTypeCheck.assertIsFunction(layersViewContainerBuilder)
 
     /**
      *
@@ -49,10 +47,6 @@ export class ComponentAtmosphereLayers {
      */
     this.__layersViewContainerBuilder = layersViewContainerBuilder
 
-    assertType(
-      isLayers(layersStyle),
-      '`layersStyle` should be LayersStyle'
-    )
     /**
      *
      * @type {LayersStyle}
@@ -60,23 +54,33 @@ export class ComponentAtmosphereLayers {
      */
     this.__layersStyle = layersStyle
 
-    PrimitiveTypeCheck.assertIsNode(parentNode)
     /**
      * @type {Element}
+     * @private
      */
     this.__parentNode = parentNode
+
+    /**
+     *
+     * @type {document}
+     * @private
+     */
+    this.__document = document
+
     /**
      *
      * @type {?LayersViewContainer}
      * @private
      */
     this.__viewContainer = null
+
     /**
      *
      * @type {Store<Layers,LayersBuilder>}
      * @private
      */
     this.__store = this.__initLayersStore()
+
     /**
      *
      * @type {PublicStoreHandler<Layers>}
@@ -142,11 +146,13 @@ export class ComponentAtmosphereLayers {
 
     action.listenWithCallback((payload) => {
 
-        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id()
+        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id() && payload.order() === 0
 
         this.__changeLayerOrder(payload)
 
-        this.__restoreFocusAndScroll(payload.id(), isCurrentShowed)
+        if (!isCurrentShowed) {
+          this.__restoreFocusAndScroll()
+        }
 
       },
       this.__componentContext
@@ -157,27 +163,40 @@ export class ComponentAtmosphereLayers {
 
   /**
    *
-   * @param {string} layerId
-   * @param {boolean} wasCurrentShowed
    * @return {ComponentAtmosphereLayers}
    * @private
    */
-  __restoreFocusAndScroll(layerId, wasCurrentShowed) {
-    if (!wasCurrentShowed) {
+  __restoreFocusAndScroll() {
 
-      /**
-       *
-       * @type {?Layer}
-       */
-      const showedLayer = this.__storeHandler.currentShowedLayer()
+    /**
+     * @type {?Layer}
+     */
+    const showedLayer = this.__storeHandler.currentShowedLayer()
 
-      /**
-       * @type {?Element}
-       */
-      const focusable = this.getElementByLayerId(showedLayer.id()).querySelector('[tabindex]:not([tabindex="-1"])')
-      if (!isNull(focusable)) {
-        focusable.focus()
-      }
+    /**
+     * @type {?Element}
+     */
+    const layerElement = this.getElementByLayerId(showedLayer.id())
+
+    /**
+     * @type {?Element}
+     */
+    let activeElement = null
+
+    if (!isNull(showedLayer.activeElementId())) {
+      activeElement = this.__document.getElementById(showedLayer.activeElementId())
+    }
+    if (isNull(activeElement)) {
+      activeElement = layerElement.querySelector('[tabindex]:not([tabindex="-1"])')
+    }
+    if (!isNull(activeElement) && activeElement !== this.__document.activeElement) {
+      activeElement.focus()
+    }
+    if (!isNull(showedLayer.scrollLeft())) {
+      layerElement.scrollLeft = showedLayer.scrollLeft()
+    }
+    if (!isNull(showedLayer.scrollTop())) {
+      layerElement.scrollTop = showedLayer.scrollTop()
     }
 
     return this
@@ -205,12 +224,14 @@ export class ComponentAtmosphereLayers {
     const action = new ActionDispatcherBuilder()
       .dispatcher(this.__componentContext.dispatcher())
       .type(globalFlexioImport.io.flexio.atmosphere_layers.actions.RemoveLayer)
-      .validator(new RemoveLayerValidator()
-      )
+      .validator(new RemoveLayerValidator())
       .build()
 
     action.listenWithCallback((payload) => {
+        const /** @type {boolean} */ isCurrentShowed = this.__storeHandler.currentShowedLayer().id() === payload.id()
+
         this.__removeLayer(payload)
+        this.__restoreFocusAndScroll()
       },
       this.__componentContext
     )
@@ -297,7 +318,6 @@ export class ComponentAtmosphereLayers {
    * @private
    */
   __removeLayer(payload) {
-
     this.__storeHandler.removeLayer(payload)
   }
 
@@ -307,7 +327,62 @@ export class ComponentAtmosphereLayers {
    * @private
    */
   __changeLayerOrder(payload) {
-    return this.__storeHandler.changeLayerOrder(payload)
+    /**
+     *
+     * @type {?Layer}
+     */
+    let currentLayerUpdated = null
+
+    if (payload.order() === 0) {
+      currentLayerUpdated = this.__updateStateCurrentLayer()
+    }
+
+    return this.__storeHandler.changeLayerOrder(payload, currentLayerUpdated)
+  }
+
+  /**
+   *
+   * @return {?Layer}
+   * @private
+   */
+  __updateStateCurrentLayer() {
+    /**
+     *
+     * @type {?Layer}
+     */
+    let currentLayerUpdated = null
+
+    const currentLayer = this.__storeHandler.currentShowedLayer()
+
+    if (!isNull(currentLayer)) {
+
+      /**
+       * @type {?Element}
+       */
+      const layerElement = this.getElementByLayerId(currentLayer.id())
+
+      /**
+       *
+       * @type {?string}
+       */
+      let idActiveElement = null
+
+      if (layerElement.contains(this.__document.activeElement) && isString(this.__document.activeElement.id)) {
+        idActiveElement = this.__document.activeElement.id
+      }
+
+      /**
+       * @type {Layer}
+       */
+      currentLayerUpdated = globalFlexioImport.io.flexio.atmosphere_layers.types.LayerBuilder
+        .from(currentLayer)
+        .scrollLeft(layerElement.scrollLeft)
+        .scrollTop(layerElement.scrollTop)
+        .activeElementId(idActiveElement)
+        .build()
+    }
+
+    return currentLayerUpdated
   }
 
   remove() {
