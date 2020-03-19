@@ -160,7 +160,7 @@ export class LayerHandler {
   associateView(view) {
     assertType(
       TypeCheck.isView(view),
-      '`view` should be View'
+      '`view` should be view'
     )
 
     this[__component].listenRemoveLayer(
