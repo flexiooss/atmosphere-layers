@@ -2,13 +2,15 @@ import '../../../generated/io/package.js'
 import {ApplicationWithStyle} from '@flexio-oss/hotballoon-test-dummies'
 import {ComponentAtmosphereLayersBuilder} from '../../js/ComponentAtmosphereLayersBuilder'
 
+
 const applicationWithStyle = ApplicationWithStyle.withConsoleLogger()
 
-const component = ComponentAtmosphereLayersBuilder.build(
-  applicationWithStyle.application(),
-  applicationWithStyle.styles().layers(),
-  document.body
-)
+const component = new ComponentAtmosphereLayersBuilder()
+  .hotballoonApplication(applicationWithStyle.application())
+  .layersStyle(applicationWithStyle.styles().layers())
+  .parentNode(document.body)
+  .document(document)
+  .build()
 
 const l1 = component.addLayer()
 l1.remove()
